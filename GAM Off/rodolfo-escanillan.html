@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Gospel Acceleration Inc.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="background.css">
+    <style>
+        :root { --primary: #1a365d; --accent: #d4af37; --text: #2d3748; --light: #f1f5f9; }
+        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--text); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
+        .profile-card { background: white; width: 100%; max-width: 450px; padding: 40px; border-radius: 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        .p-img { width: 130px; height: 130px; margin: 0 auto 20px; border-radius: 50%; border: 4px solid var(--accent); overflow: hidden; }
+        .p-img img { width: 100%; height: 100%; object-fit: cover; }
+        h1 { color: var(--primary); font-size: 1.7rem; margin: 0; }
+        .tag { color: var(--accent); font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; display: block; margin: 10px 0 25px; }
+        .info-box { background: #f8fafc; padding: 15px; border-radius: 12px; text-align: left; margin-bottom: 25px; font-size: 0.9rem; }
+        .info-item { display: flex; gap: 10px; margin-bottom: 8px; }
+        .info-item i { color: var(--primary); width: 20px; }
+        .bio { font-style: italic; color: #4a5568; line-height: 1.5; margin-bottom: 30px; }
+        .btn { display: block; text-decoration: none; padding: 12px; border-radius: 50px; font-weight: 600; transition: 0.3s; margin-bottom: 10px; }
+        .primary-btn { background: var(--primary); color: white; border: none; cursor: pointer; width: 100%; font-family: inherit; }
+        .back-btn { background: #edf2f7; color: var(--primary); }
+        /* Modal */
+        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; }
+        .modal-c { background: white; padding: 30px; border-radius: 15px; width: 80%; max-width: 300px; }
+    </style>
+</head>
+<body>
+    <div class="profile-card">
+        <div class="p-img"><img src="PRES.jpg" alt="Photo"></div>
+        <h1>Pastor Rodolfo Escanillan</h1>
+        <span class="tag">GAM SAN CARLOS</span>
+        <div class="info-box">
+            <div class="info-item"><i class="fas fa-map-marker-alt"></i> <span>Philippines</span></div>
+            <div class="info-item"><i class="fas fa-phone"></i> <span>Contact via Ministry</span></div>
+        </div>
+        <button class="primary-btn btn" onclick="document.getElementById('m').style.display='flex'">View Email Address</button>
+        <a href="index.html" class="back-btn btn"><i class="fas fa-arrow-left"></i> Back to Directory</a>
+    </div>
+    <div class="modal" id="m" onclick="this.style.display='none'">
+        <div class="modal-c">
+            <h3>Contact Email</h3>
+            <p style="color: var(--accent); font-weight: bold;">ministry@example.com</p>
+            <button class="primary-btn btn">Close</button>
+        </div>
+    </div>
+</body>
+</html>

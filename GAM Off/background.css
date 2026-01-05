@@ -1,0 +1,22 @@
+body {
+    background-image: 
+        linear-gradient(rgba(26, 54, 93, 0.9), rgba(26, 54, 93, 0.8)), 
+        url('logo.png'); /* <--- Must match your file name exactly */
+    background-size: cover;
+    background-position: left;
+    background-attachment: fixed;
+    margin: 0;
+    display: flex;
+    min-height: 100%;
+}
+
+.profile-card {
+    background: white;
+    padding: 40px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+/* ... rest of your styles ... */
