@@ -14,6 +14,7 @@
             --light: #f1f5f9;
             --white: #ffffff;
             --nav-height: 70px;
+            --border-radius: 12px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
@@ -26,7 +27,7 @@
             padding-top: var(--nav-height);
         }
 
-        /* Navigation */
+        /* --- NAVIGATION --- */
         nav {
             height: var(--nav-height);
             background: var(--primary);
@@ -37,169 +38,175 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 50px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 0 5%;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
         }
 
-        .logo { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .logo { color: var(--accent); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; font-size: 1rem; }
 
         nav ul { display: flex; list-style: none; }
         nav ul li { margin-left: 30px; }
-        nav ul li a { text-decoration: none; color: white; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
+        nav ul li a { text-decoration: none; color: white; font-size: 0.85rem; font-weight: 600; transition: 0.3s; text-transform: uppercase; }
         nav ul li a:hover { color: var(--accent); }
 
+        .menu-toggle { display: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        /* --- HEADER --- */
         header {
             background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(26, 54, 93, 0.85)), 
                         url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover; background-position: center; padding: 100px 20px; text-align: center; color: white;
+            background-size: cover; background-position: center; 
+            padding: 120px 20px 80px; 
+            text-align: center; color: white;
         }
 
-        header h1 { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 10px; }
+        header h1 { 
+            font-size: clamp(1.8rem, 5vw, 2.8rem); 
+            letter-spacing: 1px; margin-bottom: 10px; line-height: 1.2;
+        }
+        header p { font-size: clamp(1rem, 3vw, 1.2rem); opacity: 0.9; }
 
-        /* --- CONTAINER WITH GRADIENT OVERLAY --- */
+        /* --- CONTAINER --- */
         .container { 
+            width: 90%;
             max-width: 1200px; 
             margin: 40px auto; 
             padding: 60px 40px; 
-            border-radius: 20px;
-            /* Gradient: Navy Blue fading to a very light blue/transparent */
-            background: linear-gradient(180deg, rgba(26, 54, 93, 0.05) 0%, rgba(241, 245, 249, 0) 100%), var(--white);
+            border-radius: var(--border-radius);
+            background: var(--white);
             box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            text-decoration: none;
         }
 
-        .section-title { text-align: center; margin-bottom: 50px; color: var(--primary); font-size: 2.2rem; font-weight: 700; position: relative; }
+        .section-title { 
+            text-align: center; 
+            margin-bottom: 40px; 
+            color: var(--primary); 
+            font-size: 2rem; 
+            font-weight: 700; 
+            position: relative; 
+        }
         .section-title::after { content: ''; width: 60px; height: 4px; background: var(--accent); position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); }
 
-        /* --- OFFICERS LAYOUT --- */
-        .officer-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 30px;
-        }
-        .officer-card {
-            background: var(--white); border-radius: 15px; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); text-align: center;
-            border-bottom: 4px solid var(--accent); transition: 0.3s;
-        }
-        .officer-photo { width: 100%; height: 350px; background-color: #cbd5e0; overflow: hidden; }
-        .officer-photo img { width: 100%; height: 100%; object-fit: cover; }
-        
-        .officer-info { padding: 25px 15px; }
-        .officer-role { color: var(--accent); font-weight: 700; font-size: 0.75rem; text-transform: uppercase; display: block; margin-bottom: 5px; }
-        .officer-name { color: var(--primary); font-size: 1.2rem; line-height: 1.2; }
-
-        /* --- PASTORS & MINISTERIAL LAYOUT --- */
-        .pastor-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
-        }
-
-        .pastor-card {
-            text-decoration: none; /* Removes the underline */
-    color: inherit;
-            background: var(--white);
-            padding: 35px 20px;
-            border-radius: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #e2e8f0;
-        }
-
-        .pastor-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--accent);
-            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
-        }
-
-        .pastor-photo-circle {
-            width: 120px;
-            height: 120px;
-            background-color: #edf2f7;
-            border-radius: 50%;
-            margin-bottom: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--accent);
-            overflow: hidden;
-            text-decoration: none;
-        }
-
-        .pastor-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
-
-        .pastor-name { color: var(--primary); margin: 10px 0 5px; font-weight: 700; font-size: 1.1rem; line-height: 1.2; }
-        .pastor-district { color: #718096; font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; }
-
-        /* Modal Styling */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(26, 54, 93, 0.9); display: none; align-items: center; justify-content: center;
-            z-index: 2000; padding: 20px; backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background: white; width: 100%; max-width: 450px; border-radius: 25px;
-            padding: 50px 40px; position: relative; text-align: center;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.3);
-            animation: fadeIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-        
-        .close-modal { position: absolute; top: 20px; right: 25px; font-size: 1.5rem; cursor: pointer; color: #cbd5e0; transition: 0.3s; }
-        .close-modal:hover { color: var(--primary); }
-        
-        .modal-avatar { width: 100px; height: 100px; background: #edf2f7; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; border: 4px solid var(--accent); color: var(--primary); }
-        .modal-bio { margin: 20px 0; color: #4a5568; font-size: 1rem; line-height: 1.6; font-style: italic; }
-
-        footer { background: #1a202c; color: white; text-align: center; padding: 50px; margin-top: 80px; font-size: 0.9rem; letter-spacing: 1px; }
-
-        /* Responsive Fixes */
-        @media (max-width: 768px) {
-            nav { padding: 0 20px; }
-            nav ul { display: none; } /* Hide menu on mobile for simplicity */
-            header h1 { font-size: 1.8rem; }
-            .container { padding: 40px 20px; margin: 20px; }
-        }
-        /* --- MOBILE RESPONSIVE QUERIES --- */
-@media (max-width: 768px) {
-    .menu-toggle { 
-        display: block;
-        color: #cbd5e0; 
-    }
-
-    .nav-links {
-        display: none; /* Hides links initially on mobile */
-        position: absolute; 
-        top: var(--nav-height); 
-        left: 0; 
+        /* --- GRID LAYOUT LOGIC --- */
+.officer-grid, .pastor-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 25px;
+        justify-content: center; /* Centers the row */
+        justify-items: center;    /* Centers items in their cells */
         width: 100%;
-        background: var(--primary); 
-        flex-direction: column; 
-        padding: 20px;
-        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.26);
-    }
-
-    /* This class is toggled by JavaScript */
-    .nav-links.active { 
-        display: flex; 
-    }
-
-    .nav-links li { 
-        margin: 15px 0; 
-        text-align: center; 
-    }
-
-    .officer-grid, .pastor-grid {
-        grid-template-columns: 1fr; /* Stacks cards into one column */
-        max-width: 350px; 
         margin: 0 auto;
     }
-}
+        /* --- CARD STYLES --- */
+.officer-card, .pastor-card {
+        width: 100%;
+        max-width: 280px; /* Keeps cards uniform */
+        background: var(--white);
+        border-radius: var(--border-radius);
+        overflow: hidden;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        text-align: center;
+        border: 1px solid #e2e8f0;
+        transition: 0.3s ease;
+    }
+
+        .officer-card:hover, .pastor-card:hover { 
+            transform: translateY(-5px); 
+            border-color: var(--accent); 
+        }
+
+        /* Officer Specifics */
+        .officer-card { 
+            padding-bottom: 15px; 
+            border-bottom: 3px solid var(--accent); 
+        }
+        
+        .officer-photo { 
+            width: 100%; 
+            height: 200px; 
+            background-color: #cbd5e0; 
+            overflow: hidden; 
+            margin-bottom: 10px;
+        }
+        
+        .officer-photo img { width: 100%; height: 100%; object-fit: cover; }
+        
+        .officer-role { 
+            color: var(--accent); 
+            font-weight: 700; 
+            font-size: 0.7rem; 
+            text-transform: uppercase; 
+            display: block; 
+            margin-bottom: 2px; 
+        }
+        
+        .officer-name { 
+            color: var(--primary); 
+            font-size: 1rem; 
+            padding: 0 10px; 
+            line-height: 1.2;
+        }
+
+        /* Pastor/Ministerial Specifics */
+        .pastor-card { padding: 30px 20px; }
+        .pastor-photo-circle {
+            width: 120px; height: 120px; 
+            background-color: #edf2f7; border-radius: 50%;
+            margin-bottom: 15px; border: 3px solid var(--accent); overflow: hidden;
+        }
+        .pastor-photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+        .pastor-name { color: var(--primary); font-weight: 700; font-size: 1.1rem; margin-bottom: 5px; }
+        .pastor-district { color: #718096; font-size: 0.75rem; font-weight: 600; text-transform: uppercase; }
+
+        /* --- FOOTER --- */
+        footer { background: #1a202c; color: #a0aec0; text-align: center; padding: 40px 20px; margin-top: 60px; font-size: 0.85rem; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 54, 93, 0.85); display: none; align-items: center; justify-content: center;
+            z-index: 2000; padding: 20px; backdrop-filter: blur(8px);
+        }
+        .modal-content {
+            background: white; width: 100%; max-width: 400px; border-radius: 20px;
+            padding: 40px 30px; position: relative; text-align: center;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.25);
+        }
+        .close-modal { position: absolute; top: 15px; right: 20px; font-size: 1.8rem; cursor: pointer; color: #cbd5e0; }
+
+        /* --- MOBILE RESPONSIVE (Strict 3 Column Override) --- */
+        @media (max-width: 768px) {
+            .menu-toggle { display: block; }
+            nav { padding: 0 20px; }
+            
+            .nav-links {
+                display: none; position: absolute; top: var(--nav-height); left: 0; width: 100%;
+                background: var(--primary); flex-direction: column; padding: 20px 0;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links li { margin: 15px 0; text-align: center; }
+            .container { width: 95%; padding: 40px 15px; }
+
+            /* --- STRICT 3 COLUMNS ON MOBILE --- */
+            .officer-grid, .pastor-grid { 
+                grid-template-columns: repeat(3, 1fr); /* Forces 3 columns */
+                gap: 10px; /* Reduces gap so content fits */
+            }
+
+            /* Adjust Content Size for 3-Column Mobile */
+            .officer-photo { height: 100px; } /* Smaller photos */
+            .pastor-card { padding: 15px 5px; }
+            .pastor-photo-circle { width: 60px; height: 60px; margin-bottom: 8px; border-width: 2px;}
+            
+            .officer-name, .pastor-name { 
+                font-size: 0.7rem; /* Smaller text */
+                line-height: 1.1;
+                word-wrap: break-word; /* Prevents text overflow */
+            }
+            .officer-role, .pastor-district {
+                font-size: 0.55rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -216,97 +223,97 @@
     </ul>
 </nav>
 
-    <header>
-        <h1>GOSPEL ACCELERATION MINISTRIES INC.</h1>
-        <p>A Network of Faith and Acceleration</p>
-    </header>
+<header>
+    <h1>GOSPEL ACCELERATION MINISTRIES INC.</h1>
+    <p>A Network of Faith and Acceleration</p>
+</header>
 
-    <div class="container" id="officers">
-        <h2 class="section-title">Executive Officers</h2>
-        <div class="officer-grid">
-            <div class="officer-card">
-                <div class="officer-photo"><img src="PRES.jpg" alt="President"></div>
-                <div class="officer-info"><span class="officer-role">President</span><h3 class="officer-name">PTR. RODOLFO ESCANILLAN</h3></div>
-            </div>
-            <div class="officer-card">
-                <div class="officer-photo"><img src="VP.jpg" alt="VP"></div>
-                <div class="officer-info"><span class="officer-role">Vice-President</span><h3 class="officer-name">PTR. RENATO MAHUMOT</h3></div>
-            </div>
-            <div class="officer-card">
-                <div class="officer-photo"><img src="SEC.jpg" alt="Secretary"></div>
-                <div class="officer-info"><span class="officer-role">Secretary</span><h3 class="officer-name">PTR ARGELYN MAHUMOT</h3></div>
-            </div>
-            <div class="officer-card">
-                <div class="officer-photo"><img src="TRES.jpg" alt="Treasurer"></div>
-                <div class="officer-info"><span class="officer-role">Treasurer</span><h3 class="officer-name">MRS. ANGEL ABENDAN</h3></div>
-            </div>
-            <div class="officer-card">
-                <div class="officer-photo"><img src="AUD.jpg" alt="Auditor"></div>
-                <div class="officer-info"><span class="officer-role">Auditor</span><h3 class="officer-name">PTR. MARY JANE DISOR</h3></div>
-            </div>
-            <div class="officer-card">
-                <div class="officer-photo"><img src="PIO.jpg" alt="PIO"></div>
-                <div class="officer-info"><span class="officer-role">P.I.O</span><h3 class="officer-name">PTR. NANELLE HOPE ABAS</h3></div>
-            </div>
+<div class="container" id="officers">
+    <h2 class="section-title">Executive Officers</h2>
+    <div class="officer-grid">
+        <div class="officer-card">
+            <div class="officer-photo"><img src="PRES.jpg" alt="President"></div>
+            <div class="officer-info"><span class="officer-role">President</span><h3 class="officer-name">PTR. RODOLFO ESCANILLAN</h3></div>
+        </div>
+        <div class="officer-card">
+            <div class="officer-photo"><img src="VP.jpg" alt="VP"></div>
+            <div class="officer-info"><span class="officer-role">Vice-President</span><h3 class="officer-name">PTR. RENATO MAHUMOT</h3></div>
+        </div>
+        <div class="officer-card">
+            <div class="officer-photo"><img src="SEC.jpg" alt="Secretary"></div>
+            <div class="officer-info"><span class="officer-role">Secretary</span><h3 class="officer-name">PTR ARGELYN MAHUMOT</h3></div>
+        </div>
+        <div class="officer-card">
+            <div class="officer-photo"><img src="TRES.jpg" alt="Treasurer"></div>
+            <div class="officer-info"><span class="officer-role">Treasurer</span><h3 class="officer-name">MRS. ANGEL ABENDAN</h3></div>
+        </div>
+        <div class="officer-card">
+            <div class="officer-photo"><img src="AUD.jpg" alt="Auditor"></div>
+            <div class="officer-info"><span class="officer-role">Auditor</span><h3 class="officer-name">PTR. MARY JANE DISOR</h3></div>
+        </div>
+        <div class="officer-card">
+            <div class="officer-photo"><img src="PIO.jpg" alt="PIO"></div>
+            <div class="officer-info"><span class="officer-role">P.I.O</span><h3 class="officer-name">PTR. NANELLE HOPE ABAS</h3></div>
         </div>
     </div>
+</div>
 
 <div class="container" id="pastors">
     <h2 class="section-title">Pastors Panel</h2>
     <div class="pastor-grid">
         <a href="renato-mahumot.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="VP.jpg"></div>
-            <h4 class="pastor-name">Pastor Renato P. Mahumot</h4>
+            <h4 class="pastor-name">Ptr. Renato P. Mahumot</h4>
             <p class="pastor-district">GAM CANLAON</p>
         </a>
         <a href="argelyn-mahumot.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="SEC.jpg"></div>
-            <h4 class="pastor-name">Pastora Argelyn A. Mahumot</h4>
+            <h4 class="pastor-name">Ptra. Argelyn A. Mahumot</h4>
             <p class="pastor-district">GAM CANLAON</p>
         </a>
         <a href="annaliza-antoque.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="annaliza.jpg"></div>
-            <h4 class="pastor-name">Pastora Annaliza Antoque</h4>
+            <h4 class="pastor-name">Ptra. Annaliza Antoque</h4>
             <p class="pastor-district">GAM CANLAON</p>
         </a>
         <a href="james-abas.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="james.jpg"></div>
-            <h4 class="pastor-name">Pastor James M. Abas</h4>
+            <h4 class="pastor-name">Ptr. James M. Abas</h4>
             <p class="pastor-district">HOPE CITY</p>
         </a>
         <a href="nanelle-abas.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="PIO.jpg"></div>
-            <h4 class="pastor-name">Pastora Nanelle Abas</h4>
+            <h4 class="pastor-name">Ptra. Nanelle Abas</h4>
             <p class="pastor-district">HOPE CITY</p>
         </a>
         <a href="rodolfo-escanillan.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="PRES.jpg"></div>
-            <h4 class="pastor-name">Pastor Rodolfo Escanillan</h4>
+            <h4 class="pastor-name">Ptr. Rodolfo Escanillan</h4>
             <p class="pastor-district">GAM SAN CARLOS</p>
         </a>
         <a href="helen-escanillan.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="helen.jpg"></div>
-            <h4 class="pastor-name">Pastora Helen Escanillan</h4>
+            <h4 class="pastor-name">Ptra. Helen Escanillan</h4>
             <p class="pastor-district">GAM SAN CARLOS</p>
         </a>
         <a href="arturo-isidoro.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="arturo.jpg"></div>
-            <h4 class="pastor-name">Pastor Arturo B. Isidoro</h4>
+            <h4 class="pastor-name">Ptr. Arturo B. Isidoro</h4>
             <p class="pastor-district">GAM PAMPLONA</p>
         </a>
         <a href="genilita-isidoro.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="genilita.jpg"></div>
-            <h4 class="pastor-name">Pastora Genilita Isidoro</h4>
+            <h4 class="pastor-name">Ptra. Genilita Isidoro</h4>
             <p class="pastor-district">GAM PAMPLONA</p>
         </a>
         <a href="mary-jane-disor.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="AUD.jpg"></div>
-            <h4 class="pastor-name">Pastora Mary Jane Disor</h4>
+            <h4 class="pastor-name">Ptra. Mary Jane Disor</h4>
             <p class="pastor-district">GAM SAN JOSE</p>
         </a>
         <a href="jason-caramayramay.html" class="pastor-card">
             <div class="pastor-photo-circle"><img src="jason.jpg"></div>
-            <h4 class="pastor-name">Pastor Jason Caramayramay</h4>
+            <h4 class="pastor-name">Ptr. Jason Caramayramay</h4>
             <p class="pastor-district">GAM DUMAGUETE</p>
         </a>
     </div>
@@ -333,40 +340,40 @@
     </div>
 </div>
 
-    <div class="modal-overlay" id="pastorModal">
-        <div class="modal-content">
-            <span class="close-modal" onclick="closeModal()">&times;</span>
-            <div class="modal-avatar"><i class="fas fa-cross"></i></div>
-            <h2 id="modalName" style="color: var(--primary);">Name</h2>
-            <p id="modalDistrict" style="color: var(--accent); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; margin-top: 5px;"></p>
-            <div class="modal-bio" id="modalBio">Bio description goes here.</div>
-            <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;">
-            <p style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Gospel Acceleration Ministries Inc.</p>
-        </div>
+<div class="modal-overlay" id="pastorModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div class="modal-avatar" style="width:100px; height:100px; margin:0 auto 15px; border-radius:50%; background:#eee; display:flex; align-items:center; justify-content:center; border:3px solid var(--accent); color:var(--primary); font-size:2rem;"><i class="fas fa-user"></i></div>
+        <h2 id="modalName" style="color: var(--primary);">Name</h2>
+        <p id="modalDistrict" style="color: var(--accent); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; margin-top: 5px;"></p>
+        <div class="modal-bio" id="modalBio">Bio description goes here.</div>
+        <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;">
+        <p style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Gospel Acceleration Ministries Inc.</p>
     </div>
+</div>
 
-    <footer><p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed for Excellence by Rodel Arañez</p></footer>
+<footer><p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed for Excellence by Rodel Arañez</p></footer>
 
-    <script>
-        const modal = document.getElementById('pastorModal');
-        const modalName = document.getElementById('modalName');
-        const modalDistrict = document.getElementById('modalDistrict');
-        const modalBio = document.getElementById('modalBio');
+<script>
+    const modal = document.getElementById('pastorModal');
+    const modalName = document.getElementById('modalName');
+    const modalDistrict = document.getElementById('modalDistrict');
+    const modalBio = document.getElementById('modalBio');
 
-        function openModal(name, district, bio) {
-            modalName.innerText = name;
-            modalDistrict.innerText = district;
-            modalBio.innerText = bio;
-            modal.style.display = 'flex';
-        }
+    function openModal(name, district, bio) {
+        modalName.innerText = name;
+        modalDistrict.innerText = district;
+        modalBio.innerText = bio;
+        modal.style.display = 'flex';
+    }
 
-        function closeModal() { modal.style.display = 'none'; }
-        window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
+    function closeModal() { modal.style.display = 'none'; }
+    window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
 
-        function toggleMenu() {
-    const nav = document.getElementById('navLinks');
-    nav.classList.toggle('active');
-}
-    </script>
+    function toggleMenu() {
+        const nav = document.getElementById('navLinks');
+        nav.classList.toggle('active');
+    }
+</script>
 </body>
 </html>
