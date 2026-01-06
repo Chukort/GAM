@@ -3,128 +3,403 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance | Gospel Acceleration Ministries Inc.</title>
+    <title>Gospel Acceleration Inc.</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #1a365d;
-            --accent: #d4af37;
+            --primary: #1a365d; 
+            --accent: #d4af37;  
+            --text: #2d3748;
+            --light: #f1f5f9;
             --white: #ffffff;
+            --nav-height: 70px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', sans-serif;
-            height: 100vh;
+            background-color: var(--light);
+            color: var(--text);
+            line-height: 1.6;
+            padding-top: var(--nav-height);
+        }
+
+        /* --- NAVIGATION --- */
+        nav {
+            height: var(--nav-height);
+            background: var(--primary);
+            width: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 50px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+
+.logo {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+.logo img {
+    height: 50px;    
+    width: auto;    
+    display: block;
+    transition: transform 0.3s ease;
+}
+
+.logo img:hover {
+    transform: scale(1.05); 
+}
+
+/* Mobile Logo Adjustment */
+@media (max-width: 768px) {
+    .logo img {
+        height: 40px; 
+    }
+}
+
+        .nav-links { display: flex; list-style: none; }
+        .nav-links li { margin-left: 30px; }
+        .nav-links li a { text-decoration: none; color: white; font-size: 0.85rem; font-weight: 600; transition: 0.3s; }
+        .nav-links li a:hover { color: var(--accent); }
+        .menu-toggle { display: none; font-size: 1.5rem; color: white; cursor: pointer; }
+
+        /* --- HEADER --- */
+        header {
+            background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(26, 54, 93, 0.85)), 
+                        url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover; background-position: center; padding: 100px 20px; text-align: center; color: white;
+        }
+        header h1 { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
+
+        /* --- LAYOUT CONTAINERS --- */
+        .container { 
+            max-width: 1200px; 
+            margin: 40px auto; 
+            padding: 40px; 
+            border-radius: 20px;
+            background: linear-gradient(180deg, rgba(26, 54, 93, 0.05) 0%, rgba(241, 245, 249, 0) 100%), var(--white);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
+            position: relative;
+        }
+
+        .section-title { text-align: center; margin-bottom: 5px; color: var(--primary); font-size: 2.2rem; font-weight: 700; position: relative; }
+        .section-title::after { content: ''; width: 60px; height: 4px; background: var(--accent); position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); }
+
+        /* --- SCROLLING SYSTEM --- */
+        .scroll-wrapper { position: relative; display: flex; align-items: center; }
+
+        .card-grid {
+            display: flex;
+            overflow-x: auto;
+            gap: 20px;
+            padding: 20px 5px 30px 5px;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+            scrollbar-width: thin;
+            scrollbar-color: var(--accent) transparent;
+        }
+
+        /* Webkit Scrollbar */
+        .card-grid::-webkit-scrollbar { height: 6px; }
+        .card-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+
+        /* Navigation Arrows */
+        .scroll-arrow {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            background: var(--white);
+            border: 1px solid #eee;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(26, 54, 93, 0.85)), 
-                        url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000');
-            background-size: cover;
-            background-position: center;
-            color: var(--white);
-            text-align: center;
-            padding: 20px;
-        }
-
-        .maintenance-container {
-            max-width: 600px;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(15px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
-        }
-
-        .logo-icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 20px;
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-
-        .status-badge {
-            display: inline-block;
-            background: var(--accent);
             color: var(--primary);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 0.75rem;
-            margin-bottom: 30px;
-            text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
         }
+        .scroll-arrow:hover { background: var(--accent); color: white; border-color: var(--accent); }
+        .scroll-arrow.left { left: -20px; }
+        .scroll-arrow.right { right: -20px; }
 
-        p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            font-weight: 300;
-        }
-
-        .gear-container {
-            margin: 30px 0;
-        }
-
-        .fa-cog {
-            animation: spin 4s linear infinite;
-            color: var(--accent);
-            font-size: 2.5rem;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        .contact-info {
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 20px;
-        }
-
-        .contact-info a {
-            color: var(--accent);
+        /* --- UNIFIED COMPACT CARD STYLE --- */
+        .compact-card {
+            flex: 0 0 200px;
+            background: var(--white);
+            padding: 25px 15px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+            scroll-snap-align: start;
+            transition: all 0.3s ease;
             text-decoration: none;
-            font-weight: 600;
+            color: inherit;
         }
 
-        @media (max-width: 480px) {
-            h1 { font-size: 1.4rem; }
-            .maintenance-container { padding: 30px 20px; }
+        .compact-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
         }
-        .main-logo {
+
+        .photo-circle {
+            width: 100px;
             height: 100px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid var(--accent);
+            margin-bottom: 15px;
+            background-color: #edf2f7;
+        }
+
+        .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
+
+        .card-role { color: var(--accent); font-weight: 700; font-size: 0.7rem; text-transform: uppercase; margin-bottom: 5px; }
+        .card-name { color: var(--primary); font-size: 1rem; font-weight: 700; line-height: 1.2; }
+        .card-subtext { color: #718096; font-size: 0.75rem; font-weight: 600; margin-top: 5px; text-transform: uppercase; }
+
+        /* --- MODAL --- */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(26, 54, 93, 0.9); display: none; align-items: center; justify-content: center;
+            z-index: 2000; padding: 20px; backdrop-filter: blur(5px);
+        }
+        .modal-content {
+            background: white; width: 100%; max-width: 450px; border-radius: 25px;
+            padding: 50px 40px; position: relative; text-align: center;
+        }
+        .close-modal { position: absolute; top: 20px; right: 25px; font-size: 1.5rem; cursor: pointer; color: #cbd5e0; }
+
+        footer { background: #1a202c; color: white; text-align: center; padding: 50px; margin-top: 80px; font-size: 0.9rem; }
+
+        /* --- MOBILE RESPONSIVE --- */
+        @media (max-width: 768px) {
+            nav { padding: 0 20px; }
+            .menu-toggle { display: block; }
+            .nav-links {
+                display: none;
+                position: absolute; top: var(--nav-height); left: 0; width: 100%;
+                background: var(--primary); flex-direction: column; padding: 20px;
+            }
+            .nav-links.active { display: flex; }
+            .nav-links li { margin: 15px 0; text-align: center; }
+
+            .scroll-arrow { display: none; } /* Swiping is natural on mobile */
+            .compact-card { flex: 0 0 160px; padding: 15px 10px; }
+            .photo-circle { width: 85px; height: 85px; }
+            .card-name { font-size: 0.9rem; }
+            
+            .container { padding: 30px 15px; margin: 20px 10px; }
+            .section-title { font-size: 1.6rem; }
+            header h1 { font-size: 1.8rem; }
         }
     </style>
 </head>
 <body>
 
-    <div class="maintenance-container">
-<div class="logo-icon">
-    <img src="logo.png" alt="Gospel Acceleration Logo" class="main-logo">
+<nav>
+    <div class="logo">
+    <img src="logo.png" alt="Gospel Acceleration Inc. Logo">
 </div>
-        
-        <h1>Gospel Acceleration Ministries Inc.</h1>
-        <div class="status-badge">Under Maintenance</div>
-        
-        <div class="gear-container">
-            <i class="fas fa-cog"></i>
-        </div>
+    <div class="menu-toggle" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+    <ul class="nav-links" id="navLinks">
+        <li><a href="#officers" onclick="toggleMenu()">Officers</a></li>
+        <li><a href="#pastors" onclick="toggleMenu()">Pastors</a></li>
+        <li><a href="#Ministerial" onclick="toggleMenu()">Ministerial</a></li>
+    </ul>
+</nav>
 
-        <p>We are currently upgrading our digital sanctuary to have a better service. We'll be back online shortly with a fresh new experience.</p>
+<header>
+    <h1>Gospel Acceleration Ministries Inc.</h1>
+    <p>A Network of Faith and Acceleration</p>
+</header>
+
+<div class="container" id="officers">
+    <h2 class="section-title">Executive Officers</h2>
+    <div class="scroll-wrapper">
+        <button class="scroll-arrow left" onclick="scrollGrid('grid-off', -220)"><i class="fas fa-chevron-left"></i></button>
+        <div class="card-grid" id="grid-off">
+            <div class="compact-card">
+                <div class="photo-circle"><img src="PRES.jpg" alt="President"></div>
+                <span class="card-role">President</span>
+                <h3 class="card-name">PTR. RODOLFO ESCANILLAN</h3>
+            </div>
+            <div class="compact-card">
+                <div class="photo-circle"><img src="VP.jpg" alt="VP"></div>
+                <span class="card-role">Vice-President</span>
+                <h3 class="card-name">PTR. RENATO MAHUMOT</h3>
+            </div>
+            <div class="compact-card">
+                <div class="photo-circle"><img src="SEC.jpg" alt="Secretary"></div>
+                <span class="card-role">Secretary</span>
+                <h3 class="card-name">PTR ARGELYN MAHUMOT</h3>
+            </div>
+            <div class="compact-card">
+                <div class="photo-circle"><img src="TRES.jpg" alt="Treasurer"></div>
+                <span class="card-role">Treasurer</span>
+                <h3 class="card-name">MRS. ANGEL ABENDAN</h3>
+            </div>
+            <div class="compact-card">
+                <div class="photo-circle"><img src="AUD.jpg" alt="Auditor"></div>
+                <span class="card-role">Auditor</span>
+                <h3 class="card-name">PTR. MARY JANE DISOR</h3>
+            </div>
+            <div class="compact-card">
+                <div class="photo-circle"><img src="PIO.jpg" alt="PIO"></div>
+                <span class="card-role">P.I.O</span>
+                <h3 class="card-name">PTR. NANELLE HOPE ABAS</h3>
+            </div>
+        </div>
+        <button class="scroll-arrow right" onclick="scrollGrid('grid-off', 220)"><i class="fas fa-chevron-right"></i></button>
     </div>
+</div>
+
+<div class="container" id="pastors">
+    <h2 class="section-title">Pastors Panel</h2>
+    <div class="scroll-wrapper">
+        <button class="scroll-arrow left" onclick="scrollGrid('grid-pastors', -220)"><i class="fas fa-chevron-left"></i></button>
+        <div class="card-grid" id="grid-pastors">
+            <a href="renato-mahumot.html" class="compact-card">
+                <div class="photo-circle"><img src="VP.jpg"></div>
+                <h4 class="card-name">Pastor Renato P. Mahumot</h4>
+                <p class="card-subtext">GAM CANLAON</p>
+            </a>
+            <a href="argelyn-mahumot.html" class="compact-card">
+                <div class="photo-circle"><img src="SEC.jpg"></div>
+                <h4 class="card-name">Pastora Argelyn A. Mahumot</h4>
+                <p class="card-subtext">GAM CANLAON</p>
+            </a>
+            <a href="annaliza-antoque.html" class="compact-card">
+                <div class="photo-circle"><img src="annaliza.jpg"></div>
+                <h4 class="card-name">Pastora Annaliza Antoque</h4>
+                <p class="card-subtext">GAM CANLAON</p>
+            </a>
+            <a href="james-abas.html" class="compact-card">
+                <div class="photo-circle"><img src="james.jpg"></div>
+                <h4 class="card-name">Pastor James M. Abas</h4>
+                <p class="card-subtext">HOPE CITY</p>
+            </a>
+            <a href="nanelle-abas.html" class="compact-card">
+                <div class="photo-circle"><img src="PIO.jpg"></div>
+                <h4 class="card-name">Pastora Nanelle Abas</h4>
+                <p class="card-subtext">HOPE CITY</p>
+            </a>
+            <a href="rodolfo-escanillan.html" class="compact-card">
+                <div class="photo-circle"><img src="PRES.jpg"></div>
+                <h4 class="card-name">Pastor Rodolfo Escanillan</h4>
+                <p class="card-subtext">GAM SAN CARLOS</p>
+            </a>
+            <a href="helen-escanillan.html" class="compact-card">
+                <div class="photo-circle"><img src="helen.jpg"></div>
+                <h4 class="card-name">Pastora Helen Escanillan</h4>
+                <p class="card-subtext">GAM SAN CARLOS</p>
+            </a>
+            <a href="arturo-isidoro.html" class="compact-card">
+                <div class="photo-circle"><img src="arturo.jpg"></div>
+                <h4 class="card-name">Pastor Arturo B. Isidoro</h4>
+                <p class="card-subtext">GAM PAMPLONA</p>
+            </a>
+            <a href="genilita-isidoro.html" class="compact-card">
+                <div class="photo-circle"><img src="genilita.jpg"></div>
+                <h4 class="card-name">Pastora Genilita Isidoro</h4>
+                <p class="card-subtext">GAM PAMPLONA</p>
+            </a>
+            <a href="mary-jane-disor.html" class="compact-card">
+                <div class="photo-circle"><img src="AUD.jpg"></div>
+                <h4 class="card-name">Pastora Mary Jane Disor</h4>
+                <p class="card-subtext">GAM SAN JOSE</p>
+            </a>
+            <a href="jason-caramayramay.html" class="compact-card">
+                <div class="photo-circle"><img src="jason.jpg"></div>
+                <h4 class="card-name">Pastor Jason Caramayramay</h4>
+                <p class="card-subtext">GAM DUMAGUETE</p>
+            </a>
+        </div>
+        <button class="scroll-arrow right" onclick="scrollGrid('grid-pastors', 220)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<div class="container" id="Ministerial">
+    <h2 class="section-title">Ministerial Team</h2>
+    <div class="scroll-wrapper">
+        <button class="scroll-arrow left" onclick="scrollGrid('grid-min', -220)"><i class="fas fa-chevron-left"></i></button>
+        <div class="card-grid" id="grid-min">
+            <a href="anecito-disor.html" class="compact-card">
+                <div class="photo-circle"><img src="anecito.jpg"></div>
+                <h4 class="card-name">Anecito Disor</h4>
+                <p class="card-subtext">GAM SAN JOSE</p>
+            </a>
+            <a href="alfredo-antoque.html" class="compact-card">
+                <div class="photo-circle"><img src="alfredo.jpg"></div>
+                <h4 class="card-name">Alfredo M. Antoque</h4>
+                <p class="card-subtext">GAM CANLAON</p>
+            </a>
+            <a href="honeylee-caramayramay.html" class="compact-card">
+                <div class="photo-circle"><img src="honeylee.jpg"></div>
+                <h4 class="card-name">Honeylee Caramayramay</h4>
+                <p class="card-subtext">GAM CANLAON</p>
+            </a>
+        </div>
+        <button class="scroll-arrow right" onclick="scrollGrid('grid-min', 220)"><i class="fas fa-chevron-right"></i></button>
+    </div>
+</div>
+
+<div class="modal-overlay" id="pastorModal">
+    <div class="modal-content">
+        <span class="close-modal" onclick="closeModal()">&times;</span>
+        <div id="modalAvatar" style="width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px; background: #eee; display: flex; align-items: center; justify-content: center; border: 3px solid var(--accent); overflow: hidden;">
+            <i class="fas fa-user" style="font-size: 2rem; color: #ccc;"></i>
+        </div>
+        <h2 id="modalName" style="color: var(--primary);">Name</h2>
+        <p id="modalDistrict" style="color: var(--accent); font-weight: bold; text-transform: uppercase; font-size: 0.85rem; margin-top: 5px;"></p>
+        <div class="modal-bio" id="modalBio" style="margin: 20px 0; font-style: italic; color: #4a5568;">Bio description goes here.</div>
+        <hr style="border: 0; height: 1px; background: #eee; margin: 20px 0;">
+        <p style="font-size: 0.7rem; color: #aaa; text-transform: uppercase;">Gospel Acceleration Ministries Inc.</p>
+    </div>
+</div>
+
+<footer><p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed for Excellence by Rodel Arañez</p></footer>
+
+<script>
+    // Navigation Scroll Logic
+    function scrollGrid(gridId, distance) {
+        document.getElementById(gridId).scrollBy({
+            left: distance,
+            behavior: 'smooth'
+        });
+    }
+
+    // Mobile Menu Toggle
+    function toggleMenu() {
+        const nav = document.getElementById('navLinks');
+        nav.classList.toggle('active');
+    }
+
+    // Modal Logic (If needed for future dynamic use)
+    const modal = document.getElementById('pastorModal');
+    function openModal(name, district, bio) {
+        document.getElementById('modalName').innerText = name;
+        document.getElementById('modalDistrict').innerText = district;
+        document.getElementById('modalBio').innerText = bio;
+        modal.style.display = 'flex';
+    }
+    function closeModal() { modal.style.display = 'none'; }
+    window.onclick = function(event) { if (event.target == modal) { closeModal(); } }
+</script>
 
 </body>
-
 </html>
