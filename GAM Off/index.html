@@ -26,7 +26,7 @@
             padding-top: var(--nav-height);
         }
 
-        /* --- NAVIGATION --- */
+
         nav {
             height: var(--nav-height);
             background: var(--primary);
@@ -59,7 +59,7 @@
     transform: scale(1.05); 
 }
 
-/* Mobile Logo Adjustment */
+
 @media (max-width: 768px) {
     .logo img {
         height: 40px; 
@@ -72,7 +72,7 @@
         .nav-links li a:hover { color: var(--accent); }
         .menu-toggle { display: none; font-size: 1.5rem; color: white; cursor: pointer; }
 
-        /* --- HEADER --- */
+
         header {
             background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(26, 54, 93, 0.85)), 
                         url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000');
@@ -80,7 +80,7 @@
         }
         header h1 { font-size: 2.5rem; letter-spacing: 2px; margin-bottom: 10px; text-transform: uppercase; }
 
-        /* --- LAYOUT CONTAINERS --- */
+
         .container { 
             max-width: 1200px; 
             margin: 40px auto; 
@@ -94,7 +94,7 @@
         .section-title { text-align: center; margin-bottom: 5px; color: var(--primary); font-size: 2.2rem; font-weight: 700; position: relative; }
         .section-title::after { content: ''; width: 60px; height: 4px; background: var(--accent); position: absolute; bottom: -10px; left: 50%; transform: translateX(-50%); }
 
-        /* --- SCROLLING SYSTEM --- */
+
         .scroll-wrapper { position: relative; display: flex; align-items: center; }
 
         .card-grid {
@@ -108,11 +108,11 @@
             scrollbar-color: var(--accent) transparent;
         }
 
-        /* Webkit Scrollbar */
+
         .card-grid::-webkit-scrollbar { height: 6px; }
         .card-grid::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
 
-        /* Navigation Arrows */
+
         .scroll-arrow {
             position: absolute;
             width: 40px;
@@ -133,7 +133,7 @@
         .scroll-arrow.left { left: -20px; }
         .scroll-arrow.right { right: -20px; }
 
-        /* --- UNIFIED COMPACT CARD STYLE --- */
+
         .compact-card {
             flex: 0 0 200px;
             background: var(--white);
@@ -172,7 +172,7 @@
         .card-name { color: var(--primary); font-size: 1rem; font-weight: 700; line-height: 1.2; }
         .card-subtext { color: #718096; font-size: 0.75rem; font-weight: 600; margin-top: 5px; text-transform: uppercase; }
 
-        /* --- MODAL --- */
+
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(26, 54, 93, 0.9); display: none; align-items: center; justify-content: center;
@@ -186,7 +186,7 @@
 
         footer { background: #1a202c; color: white; text-align: center; padding: 50px; margin-top: 80px; font-size: 0.9rem; }
 
-        /* --- MOBILE RESPONSIVE --- */
+
         @media (max-width: 768px) {
             nav { padding: 0 20px; }
             .menu-toggle { display: block; }
@@ -198,7 +198,7 @@
             .nav-links.active { display: flex; }
             .nav-links li { margin: 15px 0; text-align: center; }
 
-            .scroll-arrow { display: none; } /* Swiping is natural on mobile */
+            .scroll-arrow { display: none; } 
             .compact-card { flex: 0 0 160px; padding: 15px 10px; }
             .photo-circle { width: 85px; height: 85px; }
             .card-name { font-size: 0.9rem; }
@@ -375,7 +375,7 @@
 <footer><p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed for Excellence by Rodel Arañez</p></footer>
 
 <script>
-    // Navigation Scroll Logic
+
     function scrollGrid(gridId, distance) {
         document.getElementById(gridId).scrollBy({
             left: distance,
@@ -383,13 +383,13 @@
         });
     }
 
-    // Mobile Menu Toggle
+
     function toggleMenu() {
         const nav = document.getElementById('navLinks');
         nav.classList.toggle('active');
     }
 
-    // Modal Logic (If needed for future dynamic use)
+
     const modal = document.getElementById('pastorModal');
     function openModal(name, district, bio) {
         document.getElementById('modalName').innerText = name;
