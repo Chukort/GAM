@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Under Maintenance | Gospel Acceleration Ministries Inc.</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #1a365d;
+            --accent: #d4af37;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(26, 54, 93, 0.85)), 
+                        url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000');
+            background-size: cover;
+            background-position: center;
+            color: var(--white);
+            text-align: center;
+            padding: 20px;
+        }
+
+        .maintenance-container {
+            max-width: 600px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(15px);
+            border-radius: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 20px;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            line-height: 1.3;
+        }
+
+        .status-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--primary);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-weight: 800;
+            font-size: 0.75rem;
+            margin-bottom: 30px;
+            text-transform: uppercase;
+        }
+
+        p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .gear-container {
+            margin: 30px 0;
+        }
+
+        .fa-cog {
+            animation: spin 4s linear infinite;
+            color: var(--accent);
+            font-size: 2.5rem;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        .contact-info {
+            font-size: 0.9rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding-top: 20px;
+        }
+
+        .contact-info a {
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 1.4rem; }
+            .maintenance-container { padding: 30px 20px; }
+        }
+        .main-logo {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="maintenance-container">
+<div class="logo-icon">
+    <img src="logo.png" alt="Gospel Acceleration Logo" class="main-logo">
+</div>
+        
+        <h1>Gospel Acceleration Ministries Inc.</h1>
+        <div class="status-badge">Under Maintenance</div>
+        
+        <div class="gear-container">
+            <i class="fas fa-cog"></i>
+        </div>
+
+        <p>We are currently upgrading our digital sanctuary to have a better service. We'll be back online shortly with a fresh new experience.</p>
+    </div>
+
+</body>
+</html>
