@@ -36,3 +36,4 @@ body {
     /* Keep your existing styles and add this line: */
     animation: smoothPop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
+

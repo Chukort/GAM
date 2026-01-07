@@ -6,45 +6,157 @@
     <title>Profile - Gospel Acceleration Inc.</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="background.css">
     <style>
         :root { --primary: #1a365d; --accent: #d4af37; --text: #2d3748; --light: #f1f5f9; }
-        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--text); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .profile-card { background: white; width: 100%; max-width: 450px; padding: 40px; border-radius: 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .p-img { width: 130px; height: 130px; margin: 0 auto 20px; border-radius: 50%; border: 4px solid var(--accent); overflow: hidden; }
+        
+        * { box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--text); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 15px; }
+        
+        /* Main Card */
+        .profile-card { background: white; width: 100%; max-width: 400px; padding: 30px 20px; border-radius: 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.1); transition: transform 0.3s ease; }
+        .p-img { width: 120px; height: 120px; margin: 0 auto 15px; border-radius: 50%; border: 4px solid var(--accent); overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .p-img img { width: 100%; height: 100%; object-fit: cover; }
-        h1 { color: var(--primary); font-size: 1.7rem; margin: 0; }
-        .tag { color: var(--accent); font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; display: block; margin: 10px 0 25px; }
-        .info-box { background: #f8fafc; padding: 15px; border-radius: 12px; text-align: left; margin-bottom: 25px; font-size: 0.9rem; }
-        .info-item { display: flex; gap: 10px; margin-bottom: 8px; }
-        .info-item i { color: var(--primary); width: 20px; }
-        .bio { font-style: italic; color: #4a5568; line-height: 1.5; margin-bottom: 30px; }
-        .btn { display: block; text-decoration: none; padding: 12px; border-radius: 50px; font-weight: 600; transition: 0.3s; margin-bottom: 10px; }
-        .primary-btn { background: var(--primary); color: white; border: none; cursor: pointer; width: 100%; font-family: inherit; }
+        
+        h1 { color: var(--primary); font-size: 1.5rem; margin: 0; letter-spacing: -0.5px; }
+        .tag { color: var(--accent); font-weight: 700; font-size: 0.75rem; letter-spacing: 1.2px; display: block; margin: 8px 0 20px; text-transform: uppercase; }
+
+        /* Buttons */
+        .btn { display: flex; align-items: center; justify-content: center; gap: 10px; text-decoration: none; padding: 14px; border-radius: 50px; font-weight: 600; transition: all 0.3s ease; margin-bottom: 12px; cursor: pointer; font-family: inherit; width: 100%; border: none; font-size: 0.95rem; }
+        .primary-btn { background: var(--primary); color: white; }
+        .primary-btn:hover { background: #122846; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(26, 54, 93, 0.3); }
+        .id-btn { background: white; color: var(--primary); border: 2px solid var(--primary); }
+        .id-btn:hover { background: var(--light); transform: translateY(-2px); }
+        .flip-btn { background: var(--accent); color: white; }
         .back-btn { background: #edf2f7; color: var(--primary); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; }
-        .modal-c { background: white; padding: 30px; border-radius: 15px; width: 80%; max-width: 300px; }
+
+        /* --- ANIMATIONS --- */
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes modalPop { 
+            from { opacity: 0; transform: scale(0.85) translateY(30px); } 
+            to { opacity: 1; transform: scale(1) translateY(0); } 
+        }
+
+        /* --- MODAL STYLES --- */
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.75); align-items: center; justify-content: center; 
+            z-index: 100; padding: 15px; backdrop-filter: blur(6px);
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-c { 
+            background: white; padding: 25px; border-radius: 24px; 
+            width: 100%; max-width: 360px; text-align: center; 
+            box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+            animation: modalPop 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: max-width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .modal-c.expanded { max-width: 550px; }
+        
+        .id-scene { width: 100%; height: 210px; perspective: 1000px; margin: 20px 0; cursor: zoom-in; transition: height 0.4s ease; }
+        .modal-c.expanded .id-scene { height: 320px; cursor: zoom-out; }
+
+        .id-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .id-card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        .id-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 15px; border: 1px solid #e2e8f0; background: #fff; overflow: hidden; }
+        .id-face img { width: 100%; height: 100%; object-fit: contain; }
+        .id-back { transform: rotateY(180deg); }
+
+        .info-box { background: #f8fafc; padding: 18px; border-radius: 16px; text-align: left; margin-bottom: 25px; font-size: 0.9rem; border: 1px solid #edf2f7; }
+        .info-item { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+        .info-item:last-child { margin-bottom: 0; }
+        .zoom-hint { font-size: 0.75rem; color: #718096; margin-bottom: 12px; font-style: italic; }
+
+        @media (max-width: 480px) {
+            .modal-c.expanded .id-scene { height: 45vh; }
+        }
     </style>
 </head>
 <body>
+
     <div class="profile-card">
         <div class="p-img"><img src="PRES.jpg" alt="Photo"></div>
         <h1>Pastor Rodolfo Escanillan</h1>
         <span class="tag">GAM SAN CARLOS</span>
-        <h3>PRESIDENT</h3>
+        <h3 style="font-size: 1.1rem; margin-top: 0; color: #4a5568;">PRESIDENT</h3>
+
         <div class="info-box">
-            <div class="info-item"><i class="fas fa-map-marker-alt"></i> <span>Philippines</span></div>
-            <div class="info-item"><i class="fas fa-phone"></i> <span>Contact via Ministry</span></div>
+            <div class="info-item"><i class="fas fa-map-marker-alt" style="color:var(--primary)"></i> <span>Philippines</span></div>
+            <div class="info-item"><i class="fas fa-phone" style="color:var(--primary)"></i> <span>Contact via Ministry</span></div>
+            <div class="info-item"><i class="fas fa-envelope" style="color:var(--primary)"></i> <span>View Email Address</span></div>
         </div>
-        <button class="primary-btn btn" onclick="document.getElementById('m').style.display='flex'">View Email Address</button>
+
+        <button class="id-btn btn" onclick="openModal('id-modal')">
+            <i class="fas fa-id-card"></i> View Digital ID
+        </button>
+
         <a href="index.html" class="back-btn btn"><i class="fas fa-arrow-left"></i> Back to Directory</a>
     </div>
-    <div class="modal" id="m" onclick="this.style.display='none'">
-        <div class="modal-c">
+
+    <div class="modal" id="email-modal" onclick="closeModal('email-modal')">
+        <div class="modal-c" onclick="event.stopPropagation()">
+            <i class="fas fa-envelope-open-text" style="font-size: 2.5rem; color: var(--accent); margin-bottom: 15px;"></i>
             <h3>Contact Email</h3>
-            <p style="color: var(--accent); font-weight: bold;">ministry@example.com</p>
-            <button class="primary-btn btn">Close</button>
+            <p style="color: var(--primary); font-weight: bold; font-size: 1.1rem; margin-bottom: 25px;">ministry@example.com</p>
+            <button class="primary-btn btn" onclick="closeModal('email-modal')">Close</button>
         </div>
     </div>
+
+    <div class="modal" id="id-modal" onclick="closeIdModal()">
+        <div class="modal-c" id="idCardContainer" onclick="event.stopPropagation()">
+            <h3 style="margin: 0; font-size: 1.2rem; color: var(--primary);">Digital Ministry ID</h3>
+            
+            <div class="id-scene" onclick="toggleExpand()">
+                <div class="id-card-inner" id="idCard">
+                    <div class="id-face id-front">
+                        <img src="ID/RODOLFO/front.jpg" alt="ID Front">
+                    </div>
+                    <div class="id-face id-back">
+                        <img src="ID/RODOLFO/backk.jpg" alt="ID Back">
+                    </div>
+                </div>
+            </div>
+
+            <p class="zoom-hint"><i class="fas fa-search-plus"></i> Tap card to zoom • Tap button to flip</p>
+
+            <button class="flip-btn btn" onclick="document.getElementById('idCard').classList.toggle('is-flipped')">
+                <i class="fas fa-sync-alt"></i> Flip to View Back
+            </button>
+
+            <button class="primary-btn btn" onclick="closeIdModal()" style="background: #e2e8f0; color: #2d3748;">Close View</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function toggleExpand() {
+            document.getElementById('idCardContainer').classList.toggle('expanded');
+        }
+
+        function closeIdModal() {
+            const container = document.getElementById('idCardContainer');
+            const card = document.getElementById('idCard');
+            // Reset ID state before closing
+            container.classList.remove('expanded');
+            setTimeout(() => {
+                card.classList.remove('is-flipped');
+                closeModal('id-modal');
+            }, 100);
+        }
+    </script>
+
 </body>
 </html>
