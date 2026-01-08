@@ -11,9 +11,9 @@
         :root {
             --brand-teal: #4fd1c5;
             --dark-bg: #000000;
-            --glass-card: rgba(0, 27, 25, 0.377); /* Darker cards for visibility over photo */
+            --glass-card: rgba(255, 255, 255, 0.05); 
             --glass-border: rgba(255, 255, 255, 0.1);
-            --nav-height: 80px;
+            --nav-height: 70px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
@@ -21,7 +21,6 @@
         body {
             font-family: 'Inter', sans-serif;
             background-color: var(--dark-bg);
-            
             background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('bg.jpg');
             background-size: cover;
             background-position: center;
@@ -31,7 +30,6 @@
             overflow-x: hidden;
         }
 
-        /* The Flare still works over the photo for a "flashlight" effect */
         .flare-container {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -39,20 +37,20 @@
         }
         .flare {
             position: absolute;
-            width: 700px; height: 700px;
-            background: radial-gradient(circle, rgba(79, 209, 197, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(79, 209, 197, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
             border-radius: 50%;
             filter: blur(80px);
             transform: translate(-50%, -50%);
-            transition: transform 0.1s ease-out;
+            transition: transform 0.2s ease-out;
             will-change: transform;
         }
 
         nav {
             height: var(--nav-height);
-            background: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
+            background: rgba(0, 0, 0, 0.9);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
             width: 100%;
             position: fixed;
             top: 0; left: 0;
@@ -64,27 +62,26 @@
             border-bottom: 1px solid var(--glass-border);
         }
 
-        .logo img { height: 45px; transition: 0.3s; }
+        .logo img { height: 35px; }
         .nav-links { display: flex; list-style: none; }
-        .nav-links li { margin-left: 30px; }
+        .nav-links li { margin-left: 20px; }
         .nav-links li a { 
-            text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: 700; 
-            text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; 
+            text-decoration: none; color: #fff; font-size: 0.65rem; font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 1px; transition: 0.3s; 
         }
         .nav-links li a:hover { color: var(--brand-teal); }
 
         header {
-            padding: 160px 20px 60px;
+            padding: 140px 20px 40px;
             text-align: center;
             position: relative;
             z-index: 1;
         }
         header h1 { 
             font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(1.8rem, 5vw, 3.5rem); 
+            font-size: clamp(1.5rem, 6vw, 3rem); 
             text-transform: uppercase; 
-            line-height: 1;
-            margin-bottom: 15px;
+            line-height: 1.1;
         }
         .outline-text {
             display: block;
@@ -101,69 +98,76 @@
             100% { background-position: 200% center; }
         }
 
-        .container { max-width: 1200px; margin: 0 auto 100px; padding: 0 40px; position: relative; z-index: 1; }
+        .container { max-width: 1200px; margin: 0 auto 60px; padding: 0 25px; position: relative; z-index: 1; }
 
         .section-title { 
             font-family: 'Archivo Black', sans-serif;
-            font-size: 1.5rem; color: white; margin-bottom: 40px; 
-            text-transform: uppercase; letter-spacing: 1px;
+            font-size: 1.1rem; color: white; margin-bottom: 25px; 
+            text-transform: uppercase; letter-spacing: 2px;
             display: flex; align-items: center; gap: 15px;
         }
-        .section-title::after { content: ''; height: 2px; flex-grow: 1; background: linear-gradient(to right, var(--brand-teal), transparent); }
+        .section-title::after { content: ''; height: 1px; flex-grow: 1; background: linear-gradient(to right, var(--brand-teal), transparent); }
 
         .scroll-wrapper { position: relative; display: flex; align-items: center; }
+        
         .card-grid {
-            display: flex; overflow-x: auto; gap: 20px; padding: 20px 5px 40px;
+            display: flex; overflow-x: auto; gap: 15px; padding: 10px 0 30px;
             scroll-snap-type: x mandatory; scrollbar-width: none;
         }
         .card-grid::-webkit-scrollbar { display: none; }
 
         .compact-card {
-            flex: 0 0 220px;
+            flex: 0 0 210px;
             background: var(--glass-card);
-            padding: 40px 20px;
-            border-radius: 24px;
+            padding: 30px 15px;
+            border-radius: 20px;
             display: flex; flex-direction: column; align-items: center; text-align: center;
             border: 1px solid var(--glass-border);
-            backdrop-filter: blur(15px);
-            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            backdrop-filter: blur(10px);
+            transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
             text-decoration: none; color: inherit;
+            scroll-snap-align: start;
         }
 
         .compact-card:hover {
-            transform: translateY(-12px);
-            background: rgba(0, 0, 0, 0.8);
+            transform: translateY(-8px);
+            background: rgba(255, 255, 255, 0.1);
             border-color: var(--brand-teal);
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
         .photo-circle {
-            width: 100px; height: 100px; border-radius: 50%;
+            width: 85px; height: 85px; border-radius: 50%;
             overflow: hidden; border: 2px solid var(--glass-border);
-            margin-bottom: 20px; background: #222; transition: 0.3s;
+            margin-bottom: 15px; background: #111;
         }
-        .compact-card:hover .photo-circle { border-color: var(--brand-teal); }
         .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
 
-        .card-role { color: var(--brand-teal); font-weight: 800; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
-        .card-name { font-size: 0.9rem; font-weight: 700; color: #fff; line-height: 1.3; }
-        .card-subtext { color: #aaa; font-size: 0.7rem; margin-top: 10px; font-weight: 500; }
+        .card-role { color: var(--brand-teal); font-weight: 800; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 8px; }
+        .card-name { font-size: 0.85rem; font-weight: 700; color: #fff; line-height: 1.2; text-transform: uppercase; }
+        .card-subtext { color: #888; font-size: 0.65rem; margin-top: 8px; font-weight: 600; }
 
         .scroll-arrow {
-            position: absolute; width: 44px; height: 44px; border-radius: 50%;
+            position: absolute; width: 36px; height: 36px; border-radius: 50%;
             background: var(--brand-teal); border: none; color: #000;
             display: flex; align-items: center; justify-content: center;
-            cursor: pointer; z-index: 10; transition: 0.3s;
+            cursor: pointer; z-index: 10;
         }
-        .scroll-arrow:hover { background: white; transform: scale(1.1); }
-        .scroll-arrow.left { left: -22px; }
-        .scroll-arrow.right { right: -22px; }
+        .scroll-arrow.left { left: -18px; }
+        .scroll-arrow.right { right: -18px; }
 
-        footer { background: rgba(0,0,0,0.9); border-top: 1px solid var(--glass-border); padding: 50px; text-align: center; color: #555; font-size: 0.8rem; }
+        footer { background: rgba(0,0,0,0.9); border-top: 1px solid var(--glass-border); padding: 40px; text-align: center; color: #666; font-size: 0.7rem; }
 
+        /* Mobile Adjustments */
         @media (max-width: 768px) {
+            header { padding-top: 110px; }
             .scroll-arrow { display: none; }
-            .compact-card { flex: 0 0 190px; }
+            .compact-card { flex: 0 0 160px; padding: 20px 10px; border-radius: 18px; }
+            .photo-circle { width: 70px; height: 70px; }
+            .card-name { font-size: 0.75rem; }
+            .card-role { font-size: 0.55rem; }
+            .card-subtext { font-size: 0.6rem; }
+            .nav-links li { margin-left: 12px; }
+            .nav-links li a { font-size: 0.55rem; }
         }
     </style>
 </head>
@@ -175,10 +179,8 @@
 
     <nav>
         <div class="logo">
-    <a href="frontpage.html">
-        <img src="logo.png" alt="GAM Logo">
-    </a>
-</div>
+            <a href="frontpage.html"><img src="logo.png" alt="GAM Logo"></a>
+        </div>
         <ul class="nav-links">
             <li><a href="#officers">Officers</a></li>
             <li><a href="#pastors">Pastors</a></li>
@@ -187,14 +189,14 @@
     </nav>
 
     <header>
-        <p style="color: var(--brand-teal); font-weight: 700; letter-spacing: 5px; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 10px;">Network Directory</p>
+        <p style="color: var(--brand-teal); font-weight: 700; letter-spacing: 3px; text-transform: uppercase; font-size: 0.6rem; margin-bottom: 5px;">Network Directory</p>
         <h1>Gospel Acceleration <br><span class="outline-text">Ministries Inc.</span></h1>
     </header>
 
     <div class="container" id="officers">
         <h2 class="section-title">Executive Officers</h2>
         <div class="scroll-wrapper">
-            <button class="scroll-arrow left" onclick="scrollGrid('grid-off', -250)"><i class="fas fa-chevron-left"></i></button>
+            <button class="scroll-arrow left" onclick="scrollGrid('grid-off', -200)"><i class="fas fa-chevron-left"></i></button>
             <div class="card-grid" id="grid-off">
                 <div class="compact-card">
                     <div class="photo-circle"><img src="PRES.jpg"></div>
@@ -227,14 +229,14 @@
                     <h3 class="card-name">PTR. NANELLE HOPE ABAS</h3>
                 </div>
             </div>
-            <button class="scroll-arrow right" onclick="scrollGrid('grid-off', 250)"><i class="fas fa-chevron-right"></i></button>
+            <button class="scroll-arrow right" onclick="scrollGrid('grid-off', 200)"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
     <div class="container" id="pastors">
         <h2 class="section-title">Pastors Panel</h2>
         <div class="scroll-wrapper">
-            <button class="scroll-arrow left" onclick="scrollGrid('grid-pastors', -250)"><i class="fas fa-chevron-left"></i></button>
+            <button class="scroll-arrow left" onclick="scrollGrid('grid-pastors', -200)"><i class="fas fa-chevron-left"></i></button>
             <div class="card-grid" id="grid-pastors">
                 <a href="renato-mahumot.html" class="compact-card">
                     <div class="photo-circle"><img src="VP.jpg"></div>
@@ -246,45 +248,20 @@
                     <h4 class="card-name">Argelyn A. Mahumot</h4>
                     <p class="card-subtext">GAM CANLAON</p>
                 </a>
-                <a href="annaliza-antoque.html" class="compact-card">
-                    <div class="photo-circle"><img src="icon.png"></div>
-                    <h4 class="card-name">Annaliza Antoque</h4>
-                    <p class="card-subtext">GAM CANLAON</p>
-                </a>
-                <a href="james-abas.html" class="compact-card">
-                    <div class="photo-circle"><img src="icon.png"></div>
-                    <h4 class="card-name">James M. Abas</h4>
-                    <p class="card-subtext">HOPE CITY</p>
-                </a>
-                <a href="nanelle-abas.html" class="compact-card">
-                    <div class="photo-circle"><img src="PIO.jpg"></div>
-                    <h4 class="card-name">Nanelle Abas</h4>
-                    <p class="card-subtext">HOPE CITY</p>
-                </a>
                 <a href="rodolfo-escanillan.html" class="compact-card">
                     <div class="photo-circle"><img src="PRES.jpg"></div>
                     <h4 class="card-name">Rodolfo Escanillan</h4>
                     <p class="card-subtext">GAM SAN CARLOS</p>
                 </a>
-                <a href="helen-escanillan.html" class="compact-card">
-                    <div class="photo-circle"><img src="icon.png"></div>
-                    <h4 class="card-name">Helen Escanillan</h4>
-                    <p class="card-subtext">GAM SAN CARLOS</p>
-                </a>
-                <a href="arturo-isidoro.html" class="compact-card">
-                    <div class="photo-circle"><img src="icon.png"></div>
-                    <h4 class="card-name">Arturo B. Isidoro</h4>
-                    <p class="card-subtext">GAM PAMPLONA</p>
-                </a>
-                <a href="genilita-isidoro.html" class="compact-card">
-                    <div class="photo-circle"><img src="icon.png"></div>
-                    <h4 class="card-name">Genilita Isidoro</h4>
-                    <p class="card-subtext">GAM PAMPLONA</p>
-                </a>
                 <a href="mary-jane-disor.html" class="compact-card">
                     <div class="photo-circle"><img src="AUD.jpg"></div>
                     <h4 class="card-name">Mary Jane Disor</h4>
                     <p class="card-subtext">GAM SAN JOSE</p>
+                </a>
+                <a href="nanelle-abas.html" class="compact-card">
+                    <div class="photo-circle"><img src="PIO.jpg"></div>
+                    <h4 class="card-name">Nanelle Abas</h4>
+                    <p class="card-subtext">HOPE CITY</p>
                 </a>
                 <a href="jason-caramayramay.html" class="compact-card">
                     <div class="photo-circle"><img src="icon.png"></div>
@@ -292,14 +269,14 @@
                     <p class="card-subtext">GAM DUMAGUETE</p>
                 </a>
             </div>
-            <button class="scroll-arrow right" onclick="scrollGrid('grid-pastors', 250)"><i class="fas fa-chevron-right"></i></button>
+            <button class="scroll-arrow right" onclick="scrollGrid('grid-pastors', 200)"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
     <div class="container" id="Ministerial">
         <h2 class="section-title">Ministerial Team</h2>
         <div class="scroll-wrapper">
-            <button class="scroll-arrow left" onclick="scrollGrid('grid-min', -250)"><i class="fas fa-chevron-left"></i></button>
+            <button class="scroll-arrow left" onclick="scrollGrid('grid-min', -200)"><i class="fas fa-chevron-left"></i></button>
             <div class="card-grid" id="grid-min">
                 <a href="anecito-disor.html" class="compact-card">
                     <div class="photo-circle"><img src="icon.png"></div>
@@ -317,12 +294,12 @@
                     <p class="card-subtext">GAM CANLAON</p>
                 </a>
             </div>
-            <button class="scroll-arrow right" onclick="scrollGrid('grid-min', 250)"><i class="fas fa-chevron-right"></i></button>
+            <button class="scroll-arrow right" onclick="scrollGrid('grid-min', 200)"><i class="fas fa-chevron-right"></i></button>
         </div>
     </div>
 
     <footer>
-        <p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed for Excellence by Rodel Arañez</p>
+        <p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed by Rodel Arañez</p>
     </footer>
 
     <script>
