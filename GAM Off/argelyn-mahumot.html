@@ -3,48 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Profile - Gospel Acceleration Inc.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Profile - Pastora Argelyn A. Mahumot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="background.css">
     <style>
-        :root { --primary: #1a365d; --accent: #d4af37; --text: #2d3748; --light: #f1f5f9; }
-        body { font-family: 'Inter', sans-serif; background: var(--light); color: var(--text); margin: 0; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 20px; }
-        .profile-card { background: white; width: 100%; max-width: 450px; padding: 40px; border-radius: 25px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        .p-img { width: 130px; height: 130px; margin: 0 auto 20px; border-radius: 50%; border: 4px solid var(--accent); overflow: hidden; }
+        :root { 
+            --brand-teal: #4fd1c5; 
+            --brand-red: #ff4d4d; 
+            --glass-bg: rgba(255, 255, 255, 0.03); 
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-dark: #0a0a0a;
+        }
+        
+        * { box-sizing: border-box; }
+        
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background: #000; 
+            background-image: radial-gradient(circle at 50% 50%, #111 0%, #000 100%);
+            color: white; 
+            margin: 0; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 100vh; 
+            padding: 15px; 
+        }
+        
+        /* Main Card */
+        .profile-card { 
+            background: var(--card-dark); 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 40px 25px; 
+            border-radius: 35px; 
+            text-align: center; 
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 25px 50px rgba(0,0,0,0.5), 0 0 30px rgba(79, 209, 197, 0.05); 
+            position: relative;
+            overflow: hidden;
+        }
+
+        .profile-card::before {
+            content: '';
+            position: absolute;
+            top: -50px; left: 50%;
+            transform: translateX(-50%);
+            width: 200px; height: 200px;
+            background: var(--brand-teal);
+            filter: blur(80px);
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .p-img { 
+            width: 140px; height: 140px; 
+            margin: 0 auto 20px; 
+            border-radius: 50%; 
+            border: 3px solid var(--brand-teal); 
+            overflow: hidden; 
+            position: relative;
+            z-index: 1;
+        }
         .p-img img { width: 100%; height: 100%; object-fit: cover; }
-        h1 { color: var(--primary); font-size: 1.7rem; margin: 0; }
-        .tag { color: var(--accent); font-weight: 700; font-size: 0.8rem; letter-spacing: 1px; display: block; margin: 10px 0 25px; }
-        .info-box { background: #f8fafc; padding: 15px; border-radius: 12px; text-align: left; margin-bottom: 25px; font-size: 0.9rem; }
-        .info-item { display: flex; gap: 10px; margin-bottom: 8px; }
-        .info-item i { color: var(--primary); width: 20px; }
-        .bio { font-style: italic; color: #4a5568; line-height: 1.5; margin-bottom: 30px; }
-        .btn { display: block; text-decoration: none; padding: 12px; border-radius: 50px; font-weight: 600; transition: 0.3s; margin-bottom: 10px; }
-        .primary-btn { background: var(--primary); color: white; border: none; cursor: pointer; width: 100%; font-family: inherit; }
-        .back-btn { background: #edf2f7; color: var(--primary); }
-        .modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); align-items: center; justify-content: center; z-index: 100; }
-        .modal-c { background: white; padding: 30px; border-radius: 15px; width: 80%; max-width: 300px; }
+        
+        h1 { 
+            font-family: 'Archivo Black', sans-serif;
+            color: white; 
+            font-size: 1.4rem; 
+            margin: 0; 
+            text-transform: uppercase;
+            letter-spacing: -0.5px; 
+        }
+        .tag { 
+            color: var(--brand-red); 
+            font-weight: 800; 
+            font-size: 0.75rem; 
+            letter-spacing: 2px; 
+            display: block; 
+            margin: 10px 0 25px; 
+            text-transform: uppercase; 
+        }
+
+        .info-box { 
+            background: rgba(255,255,255,0.02); 
+            padding: 20px; 
+            border-radius: 20px; 
+            text-align: left; 
+            margin-bottom: 25px; 
+            font-size: 0.9rem; 
+            border: 1px solid var(--glass-border); 
+        }
+        .info-item { display: flex; align-items: center; gap: 15px; margin-bottom: 12px; color: #ccc; }
+        .info-item i { width: 20px; color: var(--brand-teal); }
+
+        /* Buttons */
+        .btn { 
+            display: flex; align-items: center; justify-content: center; gap: 10px; 
+            text-decoration: none; padding: 16px; border-radius: 15px; 
+            font-weight: 700; transition: all 0.4s ease; 
+            margin-bottom: 12px; cursor: pointer; font-family: inherit; 
+            width: 100%; border: none; font-size: 0.85rem; text-transform: uppercase;
+        }
+
+        .id-btn { background: var(--brand-teal); color: #000; }
+        .id-btn:hover { background: #64ffda; transform: translateY(-3px); }
+        
+        .back-btn { background: transparent; color: white; border: 1px solid var(--glass-border); }
+        .back-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--brand-teal); }
+
+        /* Modal Styles */
+        .modal { 
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.9); align-items: center; justify-content: center; 
+            z-index: 100; padding: 15px; backdrop-filter: blur(15px);
+            opacity: 0; transition: opacity 0.4s ease;
+        }
+        .modal.active { display: flex; opacity: 1; }
+        
+        .modal-c { 
+            background: #0f0f0f; padding: 30px; border-radius: 30px; 
+            width: 100%; max-width: 400px; text-align: center; 
+            border: 1px solid var(--glass-border);
+            transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+        .modal-c.expanded { max-width: 550px; }
+        
+        /* Interactive ID card */
+        .id-scene { width: 100%; height: 210px; perspective: 1000px; margin: 20px 0; cursor: pointer; transition: height 0.4s ease; }
+        .modal-c.expanded .id-scene { height: 320px; }
+
+        .id-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1); transform-style: preserve-3d; }
+        .id-card-inner.is-flipped { transform: rotateY(180deg); }
+        
+        .id-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 20px; border: 1px solid var(--glass-border); background: #1a1a1a; overflow: hidden; }
+        .id-face img { width: 100%; height: 100%; object-fit: contain; }
+        .id-back { transform: rotateY(180deg); }
+
+        .zoom-hint { font-size: 0.7rem; color: #666; margin-bottom: 15px; text-transform: uppercase; }
+        .flip-btn { background: var(--brand-red); color: white; }
     </style>
 </head>
 <body>
+
     <div class="profile-card">
-        <div class="p-img"><img src="SEC.jpg" alt="Photo"></div>
-        <h1>Pastora Argelyn A. Mahumot</h1>
-        <span class="tag">GAM CANLAON</span>
-        <h3>SECRETARY</h3>
+        <div class="p-img"><img src="SEC.jpg" alt="Argelyn Mahumot"></div>
+        <h1>Argelyn A. Mahumot</h1>
+        <span class="tag">GAM CANLAON • SECRETARY • PASTOR</span>
+
         <div class="info-box">
+            <div class="info-item"><i class="fas fa-church"></i> <span>Gospel Acceleration Inc.</span></div>
             <div class="info-item"><i class="fas fa-map-marker-alt"></i> <span>Philippines</span></div>
-            <div class="info-item"><i class="fas fa-phone"></i> <span>Contact via Ministry</span></div>
+            <div class="info-item"><i class="fas fa-envelope"></i> <span>View Ministry Email</span></div>
         </div>
-        <button class="primary-btn btn" onclick="document.getElementById('m').style.display='flex'">View Email Address</button>
-        <a href="index.html" class="back-btn btn"><i class="fas fa-arrow-left"></i> Back to Directory</a>
+
+        <button class="id-btn btn" onclick="openModal('id-modal')">
+            <i class="fas fa-id-card"></i> View Digital ID
+        </button>
+
+        <a href="index.html" class="back-btn btn"><i class="fas fa-arrow-left"></i> Directory</a>
     </div>
-    <div class="modal" id="m" onclick="this.style.display='none'">
-        <div class="modal-c">
-            <h3>Contact Email</h3>
-            <p style="color: var(--accent); font-weight: bold;">ministry@example.com</p>
-            <button class="primary-btn btn">Close</button>
+
+    <div class="modal" id="id-modal" onclick="closeIdModal()">
+        <div class="modal-c" id="idCardContainer" onclick="event.stopPropagation()">
+            <h3 style="margin: 0; font-family: 'Archivo Black'; font-size: 1.1rem; color: var(--brand-teal); text-transform: uppercase;">Digital Ministry ID</h3>
+            
+            <div class="id-scene" onclick="toggleExpand()">
+                <div class="id-card-inner" id="idCard">
+                    <div class="id-face id-front">
+                        <img src="argelyn_front.jpg" alt="ID Front">
+                    </div>
+                    <div class="id-face id-back">
+                        <img src="argelyn_back.jpg" alt="ID Back">
+                    </div>
+                </div>
+            </div>
+
+            <p class="zoom-hint"><i class="fas fa-expand"></i> Tap card to zoom • Tap flip to rotate</p>
+
+            <button class="flip-btn btn" onclick="document.getElementById('idCard').classList.toggle('is-flipped')">
+                <i class="fas fa-sync-alt"></i> Flip Card
+            </button>
+
+            <button class="btn" onclick="closeIdModal()" style="background: rgba(255,255,255,0.1); color: white;">Close View</button>
         </div>
     </div>
+
+    <script>
+        function openModal(id) {
+            const modal = document.getElementById(id);
+            modal.style.display = 'flex';
+            setTimeout(() => { modal.classList.add('active'); }, 10);
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal(id) {
+            const modal = document.getElementById(id);
+            modal.classList.remove('active');
+            setTimeout(() => {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 400);
+        }
+
+        function toggleExpand() {
+            document.getElementById('idCardContainer').classList.toggle('expanded');
+        }
+
+        function closeIdModal() {
+            const container = document.getElementById('idCardContainer');
+            const card = document.getElementById('idCard');
+            container.classList.remove('expanded');
+            setTimeout(() => {
+                card.classList.remove('is-flipped');
+                closeModal('id-modal');
+            }, 100);
+        }
+    </script>
+
 </body>
 </html>
