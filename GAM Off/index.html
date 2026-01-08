@@ -3,127 +3,341 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Under Maintenance | Gospel Acceleration Ministries Inc.</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Gospel Acceleration Inc. | Leadership</title>
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         :root {
-            --primary: #1a365d;
-            --accent: #d4af37;
-            --white: #ffffff;
+            --brand-teal: #4fd1c5;
+            --dark-bg: #000000;
+            --glass-card: rgba(0, 27, 25, 0.377); /* Darker cards for visibility over photo */
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --nav-height: 80px;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * { box-sizing: border-box; margin: 0; padding: 0; scroll-behavior: smooth; }
 
         body {
             font-family: 'Inter', sans-serif;
-            height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: linear-gradient(rgba(26, 54, 93, 0.85), rgba(26, 54, 93, 0.85)), 
-                        url('https://images.unsplash.com/photo-1438232992991-995b7058bbb3?auto=format&fit=crop&q=80&w=2000');
+            background-color: var(--dark-bg);
+            
+            background-image: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('bg.jpg');
             background-size: cover;
             background-position: center;
-            color: var(--white);
+            background-attachment: fixed;
+            color: white;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* The Flare still works over the photo for a "flashlight" effect */
+        .flare-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 0; pointer-events: none;
+        }
+        .flare {
+            position: absolute;
+            width: 700px; height: 700px;
+            background: radial-gradient(circle, rgba(79, 209, 197, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
+            border-radius: 50%;
+            filter: blur(80px);
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            will-change: transform;
+        }
+
+        nav {
+            height: var(--nav-height);
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            width: 100%;
+            position: fixed;
+            top: 0; left: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 5%;
+            border-bottom: 1px solid var(--glass-border);
+        }
+
+        .logo img { height: 45px; transition: 0.3s; }
+        .nav-links { display: flex; list-style: none; }
+        .nav-links li { margin-left: 30px; }
+        .nav-links li a { 
+            text-decoration: none; color: #fff; font-size: 0.7rem; font-weight: 700; 
+            text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; 
+        }
+        .nav-links li a:hover { color: var(--brand-teal); }
+
+        header {
+            padding: 160px 20px 60px;
             text-align: center;
-            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+        header h1 { 
+            font-family: 'Archivo Black', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3.5rem); 
+            text-transform: uppercase; 
+            line-height: 1;
+            margin-bottom: 15px;
+        }
+        .outline-text {
+            display: block;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.3);
+            color: transparent;
+            background: linear-gradient(120deg, transparent 30%, var(--brand-teal) 50%, transparent 70%);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            animation: shine 6s linear infinite;
         }
 
-        .maintenance-container {
-            max-width: 600px;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.05);
+        @keyframes shine {
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
+        }
+
+        .container { max-width: 1200px; margin: 0 auto 100px; padding: 0 40px; position: relative; z-index: 1; }
+
+        .section-title { 
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem; color: white; margin-bottom: 40px; 
+            text-transform: uppercase; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .section-title::after { content: ''; height: 2px; flex-grow: 1; background: linear-gradient(to right, var(--brand-teal), transparent); }
+
+        .scroll-wrapper { position: relative; display: flex; align-items: center; }
+        .card-grid {
+            display: flex; overflow-x: auto; gap: 20px; padding: 20px 5px 40px;
+            scroll-snap-type: x mandatory; scrollbar-width: none;
+        }
+        .card-grid::-webkit-scrollbar { display: none; }
+
+        .compact-card {
+            flex: 0 0 220px;
+            background: var(--glass-card);
+            padding: 40px 20px;
+            border-radius: 24px;
+            display: flex; flex-direction: column; align-items: center; text-align: center;
+            border: 1px solid var(--glass-border);
             backdrop-filter: blur(15px);
-            border-radius: 30px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 25px 50px rgba(0,0,0,0.3);
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            text-decoration: none; color: inherit;
         }
 
-        .logo-icon {
-            font-size: 3rem;
-            color: var(--accent);
-            margin-bottom: 20px;
+        .compact-card:hover {
+            transform: translateY(-12px);
+            background: rgba(0, 0, 0, 0.8);
+            border-color: var(--brand-teal);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
         }
 
-        h1 {
-            font-size: 1.8rem;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            margin-bottom: 10px;
-            line-height: 1.3;
+        .photo-circle {
+            width: 100px; height: 100px; border-radius: 50%;
+            overflow: hidden; border: 2px solid var(--glass-border);
+            margin-bottom: 20px; background: #222; transition: 0.3s;
         }
+        .compact-card:hover .photo-circle { border-color: var(--brand-teal); }
+        .photo-circle img { width: 100%; height: 100%; object-fit: cover; }
 
-        .status-badge {
-            display: inline-block;
-            background: var(--accent);
-            color: var(--primary);
-            padding: 5px 15px;
-            border-radius: 50px;
-            font-weight: 800;
-            font-size: 0.75rem;
-            margin-bottom: 30px;
-            text-transform: uppercase;
-        }
+        .card-role { color: var(--brand-teal); font-weight: 800; font-size: 0.6rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 10px; }
+        .card-name { font-size: 0.9rem; font-weight: 700; color: #fff; line-height: 1.3; }
+        .card-subtext { color: #aaa; font-size: 0.7rem; margin-top: 10px; font-weight: 500; }
 
-        p {
-            font-size: 1.1rem;
-            opacity: 0.9;
-            margin-bottom: 30px;
-            font-weight: 300;
+        .scroll-arrow {
+            position: absolute; width: 44px; height: 44px; border-radius: 50%;
+            background: var(--brand-teal); border: none; color: #000;
+            display: flex; align-items: center; justify-content: center;
+            cursor: pointer; z-index: 10; transition: 0.3s;
         }
+        .scroll-arrow:hover { background: white; transform: scale(1.1); }
+        .scroll-arrow.left { left: -22px; }
+        .scroll-arrow.right { right: -22px; }
 
-        .gear-container {
-            margin: 30px 0;
-        }
+        footer { background: rgba(0,0,0,0.9); border-top: 1px solid var(--glass-border); padding: 50px; text-align: center; color: #555; font-size: 0.8rem; }
 
-        .fa-cog {
-            animation: spin 4s linear infinite;
-            color: var(--accent);
-            font-size: 2.5rem;
-        }
-
-        @keyframes spin {
-            100% { transform: rotate(360deg); }
-        }
-
-        .contact-info {
-            font-size: 0.9rem;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            padding-top: 20px;
-        }
-
-        .contact-info a {
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 600;
-        }
-
-        @media (max-width: 480px) {
-            h1 { font-size: 1.4rem; }
-            .maintenance-container { padding: 30px 20px; }
-        }
-        .main-logo {
-            height: 100px;
+        @media (max-width: 768px) {
+            .scroll-arrow { display: none; }
+            .compact-card { flex: 0 0 190px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="maintenance-container">
-<div class="logo-icon">
-    <img src="logo.png" alt="Gospel Acceleration Logo" class="main-logo">
-</div>
-        
-        <h1>Gospel Acceleration Ministries Inc.</h1>
-        <div class="status-badge">Under Maintenance</div>
-        
-        <div class="gear-container">
-            <i class="fas fa-cog"></i>
-        </div>
-
-        <p>We are currently upgrading our digital sanctuary to have a better service. We'll be back online shortly with a fresh new experience.</p>
+    <div class="flare-container">
+        <div class="flare" id="mouseFlare"></div>
     </div>
 
+    <nav>
+        <div class="logo">
+    <a href="frontpage.html">
+        <img src="logo.png" alt="GAM Logo">
+    </a>
+</div>
+        <ul class="nav-links">
+            <li><a href="#officers">Officers</a></li>
+            <li><a href="#pastors">Pastors</a></li>
+            <li><a href="#Ministerial">Ministerial</a></li>
+        </ul>
+    </nav>
+
+    <header>
+        <p style="color: var(--brand-teal); font-weight: 700; letter-spacing: 5px; text-transform: uppercase; font-size: 0.7rem; margin-bottom: 10px;">Network Directory</p>
+        <h1>Gospel Acceleration <br><span class="outline-text">Ministries Inc.</span></h1>
+    </header>
+
+    <div class="container" id="officers">
+        <h2 class="section-title">Executive Officers</h2>
+        <div class="scroll-wrapper">
+            <button class="scroll-arrow left" onclick="scrollGrid('grid-off', -250)"><i class="fas fa-chevron-left"></i></button>
+            <div class="card-grid" id="grid-off">
+                <div class="compact-card">
+                    <div class="photo-circle"><img src="PRES.jpg"></div>
+                    <span class="card-role">President</span>
+                    <h3 class="card-name">PTR. RODOLFO ESCANILLAN</h3>
+                </div>
+                <div class="compact-card">
+                    <div class="photo-circle"><img src="VP.jpg"></div>
+                    <span class="card-role">Vice-President</span>
+                    <h3 class="card-name">PTR. RENATO MAHUMOT</h3>
+                </div>
+                <div class="compact-card">
+                    <div class="photo-circle"><img src="SEC.jpg"></div>
+                    <span class="card-role">Secretary</span>
+                    <h3 class="card-name">PTR ARGELYN MAHUMOT</h3>
+                </div>
+                <div class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <span class="card-role">Treasurer</span>
+                    <h3 class="card-name">MRS. ANGEL ABENDAN</h3>
+                </div>
+                <div class="compact-card">
+                    <div class="photo-circle"><img src="AUD.jpg"></div>
+                    <span class="card-role">Auditor</span>
+                    <h3 class="card-name">PTR. MARY JANE DISOR</h3>
+                </div>
+                <div class="compact-card">
+                    <div class="photo-circle"><img src="PIO.jpg"></div>
+                    <span class="card-role">P.I.O</span>
+                    <h3 class="card-name">PTR. NANELLE HOPE ABAS</h3>
+                </div>
+            </div>
+            <button class="scroll-arrow right" onclick="scrollGrid('grid-off', 250)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <div class="container" id="pastors">
+        <h2 class="section-title">Pastors Panel</h2>
+        <div class="scroll-wrapper">
+            <button class="scroll-arrow left" onclick="scrollGrid('grid-pastors', -250)"><i class="fas fa-chevron-left"></i></button>
+            <div class="card-grid" id="grid-pastors">
+                <a href="renato-mahumot.html" class="compact-card">
+                    <div class="photo-circle"><img src="VP.jpg"></div>
+                    <h4 class="card-name">Pastor Renato P. Mahumot</h4>
+                    <p class="card-subtext">GAM CANLAON</p>
+                </a>
+                <a href="argelyn-mahumot.html" class="compact-card">
+                    <div class="photo-circle"><img src="SEC.jpg"></div>
+                    <h4 class="card-name">Pastora Argelyn A. Mahumot</h4>
+                    <p class="card-subtext">GAM CANLAON</p>
+                </a>
+                <a href="annaliza-antoque.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Pastora Annaliza Antoque</h4>
+                    <p class="card-subtext">GAM CANLAON</p>
+                </a>
+                <a href="james-abas.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Pastor James M. Abas</h4>
+                    <p class="card-subtext">HOPE CITY</p>
+                </a>
+                <a href="nanelle-abas.html" class="compact-card">
+                    <div class="photo-circle"><img src="PIO.jpg"></div>
+                    <h4 class="card-name">Pastora Nanelle Abas</h4>
+                    <p class="card-subtext">HOPE CITY</p>
+                </a>
+                <a href="rodolfo-escanillan.html" class="compact-card">
+                    <div class="photo-circle"><img src="PRES.jpg"></div>
+                    <h4 class="card-name">Pastor Rodolfo Escanillan</h4>
+                    <p class="card-subtext">GAM SAN CARLOS</p>
+                </a>
+                <a href="helen-escanillan.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Pastora Helen Escanillan</h4>
+                    <p class="card-subtext">GAM SAN CARLOS</p>
+                </a>
+                <a href="arturo-isidoro.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Pastor Arturo B. Isidoro</h4>
+                    <p class="card-subtext">GAM PAMPLONA</p>
+                </a>
+                <a href="genilita-isidoro.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Pastora Genilita Isidoro</h4>
+                    <p class="card-subtext">GAM PAMPLONA</p>
+                </a>
+                <a href="mary-jane-disor.html" class="compact-card">
+                    <div class="photo-circle"><img src="AUD.jpg"></div>
+                    <h4 class="card-name">Pastora Mary Jane Disor</h4>
+                    <p class="card-subtext">GAM SAN JOSE</p>
+                </a>
+                <a href="jason-caramayramay.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Pastor Jason Caramayramay</h4>
+                    <p class="card-subtext">GAM DUMAGUETE</p>
+                </a>
+            </div>
+            <button class="scroll-arrow right" onclick="scrollGrid('grid-pastors', 250)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <div class="container" id="Ministerial">
+        <h2 class="section-title">Ministerial Team</h2>
+        <div class="scroll-wrapper">
+            <button class="scroll-arrow left" onclick="scrollGrid('grid-min', -250)"><i class="fas fa-chevron-left"></i></button>
+            <div class="card-grid" id="grid-min">
+                <a href="anecito-disor.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Anecito Disor</h4>
+                    <p class="card-subtext">GAM SAN JOSE</p>
+                </a>
+                <a href="alfredo-antoque.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Alfredo M. Antoque</h4>
+                    <p class="card-subtext">GAM CANLAON</p>
+                </a>
+                <a href="honeylee-caramayramay.html" class="compact-card">
+                    <div class="photo-circle"><img src="icon.png"></div>
+                    <h4 class="card-name">Honeylee Caramayramay</h4>
+                    <p class="card-subtext">GAM CANLAON</p>
+                </a>
+            </div>
+            <button class="scroll-arrow right" onclick="scrollGrid('grid-min', 250)"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed for Excellence by Rodel Arañez</p>
+    </footer>
+
+    <script>
+        const flare = document.getElementById('mouseFlare');
+        window.addEventListener('mousemove', (e) => {
+            flare.style.left = e.clientX + 'px';
+            flare.style.top = e.clientY + 'px';
+        });
+
+        function scrollGrid(gridId, distance) {
+            document.getElementById(gridId).scrollBy({
+                left: distance,
+                behavior: 'smooth'
+            });
+        }
+    </script>
 </body>
 </html>

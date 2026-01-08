@@ -3,45 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GAM</title>
-    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <title>Gospel Acceleration Ministries</title>
     <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        :root {
+            --brand-teal: #4fd1c5;
+            --brand-red: #ff4d4d;
+            --glass-bg: rgba(255, 255, 255, 0.03);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
         body, html { 
             margin: 0; 
             padding: 0; 
             font-family: 'Inter', sans-serif; 
             background-color: #000; 
             color: white; 
-            overflow-x: hidden; /* Prevents flare from causing horizontal scroll */
+            overflow-x: hidden;
+            scroll-behavior: smooth;
         }
 
-        /* Moving Flare Container */
+        /* Interactive Flare */
         .flare-container {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
             z-index: 1; 
-            pointer-events: none; /* Allows clicking through the flare */
+            pointer-events: none;
         }
 
         .flare {
             position: absolute;
-            width: 800px;
-            height: 800px;
-            /* Soft teal/white glow matches the brand colors */
-            background: radial-gradient(circle, rgba(79, 209, 197, 0.12) 0%, rgba(0, 0, 0, 0) 70%);
+            width: 600px; height: 600px;
+            background: radial-gradient(circle, rgba(79, 209, 197, 0.15) 0%, rgba(0, 0, 0, 0) 70%);
             border-radius: 50%;
-            filter: blur(60px);
-            animation: moveFlare 20s infinite alternate ease-in-out;
-        }
-
-        @keyframes moveFlare {
-            0% { transform: translate(-20%, -20%); }
-            100% { transform: translate(80vw, 40vh); }
+            filter: blur(80px);
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease-out;
+            will-change: transform;
         }
 
         /* Navigation */
@@ -49,38 +48,45 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            position: absolute;
-            width: 90%;
-            z-index: 10;
+            padding: 15px 5%;
+            position: fixed;
+            top: 0;
+            width: 100%;
+            z-index: 100;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--glass-border);
+            box-sizing: border-box;
         }
 
         .logo-img {
-            height: 50px;      
+            height: 40px;      
             width: auto;       
-            display: block;
-            transition: opacity 0.3s ease;
+            transition: transform 0.3s ease;
         }
 
-        .logo-img:hover {
-            opacity: 0.8;
-        }
+        .logo-img:hover { transform: scale(1.05); }
 
         .nav-links a { 
             color: white; 
             text-decoration: none; 
-            margin: 0 15px; 
+            margin-left: 30px; 
             font-weight: 700; 
-            font-size: 0.8rem; 
+            font-size: 0.75rem; 
             text-transform: uppercase; 
-            letter-spacing: 1px; 
+            letter-spacing: 2px; 
+            transition: color 0.3s ease;
+            cursor: pointer;
         }
+
+        .nav-links a:hover { color: var(--brand-teal); }
 
         /* Hero Section */
         .hero {
             height: 100vh;
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), 
-                        url('bg.jpg'); /* Ensure bg.jpg is in your folder */
+            background: radial-gradient(circle at center, rgba(0,0,0,0.4) 0%, #000 100%), 
+                        url('bg.jpg'); 
             background-size: cover;
             background-position: center;
             display: flex;
@@ -89,62 +95,305 @@
             align-items: center;
             text-align: center;
             position: relative;
-            z-index: 2; /* Sits above the flare */
+            z-index: 2;
+            padding: 0 20px;
         }
 
         .hero h1 {
             font-family: 'Archivo Black', sans-serif;
-            font-size: clamp(3rem, 10vw, 6rem); /* Responsive font size */
+            font-size: clamp(2.5rem, 8vw, 5.5rem);
             text-transform: uppercase;
-            line-height: 0.9;
+            line-height: 1;
             margin: 0;
+            letter-spacing: -2px;
         }
 
-        /* Animated Outline Effect */
         .outline-text {
-            -webkit-text-stroke: 2px white;
+            display: block;
+            -webkit-text-stroke: 1px rgba(255, 255, 255, 0.4);
             color: transparent;
-            position: relative;
-            background: linear-gradient(120deg, transparent 40%, rgba(0, 204, 255, 0.7) 50%, transparent 60%);
-            background-size: 200% 100%;
+            background: linear-gradient(120deg, transparent 30%, var(--brand-teal) 45%, #fff 50%, var(--brand-teal) 55%, transparent 70%);
+            background-size: 200% auto;
             -webkit-background-clip: text;
-            animation: shine 5s infinite;
+            background-clip: text;
+            animation: shine 6s linear infinite;
         }
 
         @keyframes shine {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
+            0% { background-position: -200% center; }
+            100% { background-position: 200% center; }
         }
 
         .hero p { 
-            font-weight: bold; 
-            font-size: 1.2rem; 
-            margin-top: 20px; 
-            letter-spacing: 4px; 
+            font-weight: 400; 
+            font-size: clamp(0.8rem, 2vw, 1.1rem);
+            margin-top: 30px; 
+            letter-spacing: 6px; 
+            text-transform: uppercase;
+            color: var(--brand-teal);
+            opacity: 0.8;
+        }
+
+        /* --- MODAL STYLES --- */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            display: none; 
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .modal-content {
+            background: rgba(10, 10, 10, 0.95);
+            border: 1px solid var(--glass-border);
+            width: 95%;
+            max-width: 700px;
+            max-height: 85vh; /* Prevent overflow on small screens */
+            padding: 40px;
+            border-radius: 30px;
+            position: relative;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            transform: scale(0.9) translateY(20px);
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1) translateY(0);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 25px;
+            font-size: 2rem;
+            color: #555;
+            cursor: pointer;
+            transition: 0.3s;
+            z-index: 10;
+        }
+
+        .close-modal:hover { color: var(--brand-teal); }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+
+        .modal-header h2 {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 1.5rem;
+            color: var(--brand-teal);
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+        }
+
+        /* Scrollable Acronym Container */
+        .acronym-container {
+            overflow-y: auto;
+            padding-right: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+        }
+
+        /* Custom Scrollbar for the list */
+        .acronym-container::-webkit-scrollbar { width: 4px; }
+        .acronym-container::-webkit-scrollbar-track { background: transparent; }
+        .acronym-container::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 10px; }
+
+        .acronym-row {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+            opacity: 0;
+            transform: translateX(-15px);
+            transition: 0.5s ease;
+        }
+
+        .modal-overlay.active .acronym-row {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .acronym-letter {
+            font-family: 'Archivo Black', sans-serif;
+            font-size: 3rem;
+            color: var(--brand-red);
+            line-height: 1;
+            text-shadow: 0 0 15px rgba(255, 77, 77, 0.4);
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .acronym-text h3 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #fff;
+            letter-spacing: 1px;
+        }
+
+        .acronym-text p {
+            margin: 4px 0 0 0;
+            font-size: 0.85rem;
+            color: var(--brand-teal);
+            font-style: italic;
             opacity: 0.9;
+        }
+
+        /* Animation delays for 12 letters */
+        .modal-overlay.active .acronym-row:nth-child(1) { transition-delay: 0.1s; }
+        .modal-overlay.active .acronym-row:nth-child(2) { transition-delay: 0.15s; }
+        .modal-overlay.active .acronym-row:nth-child(3) { transition-delay: 0.2s; }
+        .modal-overlay.active .acronym-row:nth-child(4) { transition-delay: 0.25s; }
+        .modal-overlay.active .acronym-row:nth-child(5) { transition-delay: 0.3s; }
+        .modal-overlay.active .acronym-row:nth-child(6) { transition-delay: 0.35s; }
+        .modal-overlay.active .acronym-row:nth-child(7) { transition-delay: 0.4s; }
+        .modal-overlay.active .acronym-row:nth-child(8) { transition-delay: 0.45s; }
+        .modal-overlay.active .acronym-row:nth-child(9) { transition-delay: 0.5s; }
+        .modal-overlay.active .acronym-row:nth-child(10) { transition-delay: 0.55s; }
+        .modal-overlay.active .acronym-row:nth-child(11) { transition-delay: 0.6s; }
+        .modal-overlay.active .acronym-row:nth-child(12) { transition-delay: 0.65s; }
+
+        .scroll-indicator {
+            position: absolute;
+            bottom: 30px;
+            width: 2px;
+            height: 50px;
+            background: linear-gradient(to bottom, var(--brand-teal), transparent);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scaleY(0); transform-origin: top; opacity: 0; }
+            50% { transform: scaleY(1); transform-origin: top; opacity: 1; }
+            100% { transform: scaleY(0); transform-origin: bottom; opacity: 0; }
         }
     </style>
 </head>
 <body>
 
     <div class="flare-container">
-        <div class="flare"></div>
+        <div class="flare" id="mouseFlare"></div>
+    </div>
+
+    <div class="modal-overlay" id="aboutModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="toggleModal()">&times;</span>
+            <div class="modal-header">
+                <h2>DIVINE MOMENTUM</h2>
+                <p style="font-size: 0.7rem; letter-spacing: 3px; color: #666;">GOSPEL ACCELERATION MINISTRIES INC.</p>
+            </div>
+
+            <div class="acronym-container">
+                <div class="acronym-row">
+                    <div class="acronym-letter">A</div>
+                    <div class="acronym-text"><h3>Anointed for Speed</h3><p>1 Kings 18:46</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">C</div>
+                    <div class="acronym-text"><h3>Covenant Alignment</h3><p>Deuteronomy 8:18</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">C</div>
+                    <div class="acronym-text"><h3>Commissioned by Christ</h3><p>Matthew 28:19</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">E</div>
+                    <div class="acronym-text"><h3>Empowered by the Spirit</h3><p>Acts 1:8</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">L</div>
+                    <div class="acronym-text"><h3>Leading with Excellence</h3><p>Daniel 6:3</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">E</div>
+                    <div class="acronym-text"><h3>Expanding the Territory</h3><p>Isaiah 54:2</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">R</div>
+                    <div class="acronym-text"><h3>Restoration of Time</h3><p>Joel 2:25</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">A</div>
+                    <div class="acronym-text"><h3>Advancing the Kingdom</h3><p>Matthew 11:12</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">T</div>
+                    <div class="acronym-text"><h3>Transforming Communities</h3><p>Romans 12:2</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">I</div>
+                    <div class="acronym-text"><h3>Increasing in Grace</h3><p>2 Corinthians 9:8</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">O</div>
+                    <div class="acronym-text"><h3>Overcoming Obstacles</h3><p>1 John 5:4</p></div>
+                </div>
+                <div class="acronym-row">
+                    <div class="acronym-letter">N</div>
+                    <div class="acronym-text"><h3>Next-Level Harvest</h3><p>Amos 9:13</p></div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <nav>
-        <a href="/">
-            <img src="logo.png" alt="RLC SAC Logo" class="logo-img">
+        <a href="#">
+            <img src="logo.png" alt="RLC SAC" class="logo-img">
         </a>
         <div class="nav-links">
-            <a href="#">About</a>
+            <a onclick="toggleModal()">About</a>
             <a href="index.html">Core</a>
         </div>
     </nav>
 
     <section class="hero">
-        <h1>Welcome to<br><span class="outline-text">Gospel Acceleration Ministries</span></h1>
+        <p>A Network of Faith and Acceleration</p>
+        <h1>Welcome to<br><span class="outline-text">Gospel Acceleration</span></h1>
+        <div class="scroll-indicator"></div>
     </section>
 
-</body>
+    <script>
+        const flare = document.getElementById('mouseFlare');
+        
+        window.addEventListener('mousemove', (e) => {
+            flare.style.left = e.clientX + 'px';
+            flare.style.top = e.clientY + 'px';
+        });
 
+        function toggleModal() {
+            const modal = document.getElementById('aboutModal');
+            if (!modal.classList.contains('active')) {
+                modal.style.display = 'flex';
+                setTimeout(() => { modal.classList.add('active'); }, 10);
+            } else {
+                modal.classList.remove('active');
+                setTimeout(() => { modal.style.display = 'none'; }, 400); 
+            }
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('aboutModal');
+            if (event.target == modal) { toggleModal(); }
+        }
+    </script>
+
+</body>
 </html>
