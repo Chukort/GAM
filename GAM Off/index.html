@@ -157,10 +157,19 @@
 
         footer { background: rgba(0,0,0,0.9); border-top: 1px solid var(--glass-border); padding: 40px; text-align: center; color: #666; font-size: 0.7rem; }
 
-        /* Mobile Adjustments */
         @media (max-width: 768px) {
             header { padding-top: 110px; }
-            .scroll-arrow { display: none; }
+            
+
+            .scroll-arrow { 
+                display: flex; 
+                width: 32px; 
+                height: 32px; 
+                background: #1a464149; 
+            }
+            .scroll-arrow.left { left: 0px; }
+            .scroll-arrow.right { right: 0px; }
+
             .compact-card { flex: 0 0 160px; padding: 20px 10px; border-radius: 18px; }
             .photo-circle { width: 70px; height: 70px; }
             .card-name { font-size: 0.75rem; }
@@ -323,15 +332,15 @@
         </div>
     </div>
 
-<footer>
-    <p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed by 
-        <a href="https://www.facebook.com/photo?fbid=3074750996061713&set=a.104863736383802" 
-           target="_blank" 
-           style="color: var(--brand-teal); text-decoration: none; font-weight: 700;">
-           Rodel Arañez
-        </a>
-    </p>
-</footer>
+    <footer>
+        <p>&copy; 2026 Gospel Acceleration Ministries Inc. | Designed by 
+            <a href="https://www.facebook.com/photo?fbid=3074750996061713&set=a.104863736383802" 
+               target="_blank" 
+               style="color: var(--brand-teal); text-decoration: none; font-weight: 700;">
+                Rodel Arañez
+            </a>
+        </p>
+    </footer>
 
     <script>
         const flare = document.getElementById('mouseFlare');
@@ -348,5 +357,4 @@
         }
     </script>
 </body>
-
 </html>
