@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-
+sss
     <div class="container" style="max-width: 1000px;">
         <div class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
             <div>
@@ -23,8 +23,7 @@
 
         <div class="admin-controls">
             <label>Filter by Church</label>
-            <div class="tabs-container" id="tabsList" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px;">
-                </div>
+            <div class="tabs-container" id="tabsList" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px;"></div>
 
             <div class="search-actions" style="display: flex; gap: 12px; margin-bottom: 25px; align-items: center; flex-wrap: wrap;">
                 <input type="text" id="searchInput" placeholder="Search participant name..." onkeyup="filterAndRender()" style="flex: 2; min-width: 250px;">
@@ -65,28 +64,24 @@
 
     <script>
         // --- GITHUB CONFIGURATION ---
-    const GITHUB_TOKEN = "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"; // Put your token here
-    const OWNER = "Chukort";               // Put your GitHub username here
-    const REPO = "GAM";               // Put your repo name here
-    const FILE_PATH = "db/database.json";           // Same folder as this file
+        const OWNER = "Chukort";
+        const REPO = "GAM";
+        const FILE_PATH = "db/database.json"; // Ensure this matches your folder structure on GitHub
 
-        let fullDatabase = []; // Stores all data from cloud
+        let fullDatabase = [];
         let currentFilter = "All";
 
-        /**
-         * Fetches the latest data directly from GitHub Raw
-         */
         async function fetchCloudData() {
             const body = document.getElementById('adminBody');
+            // Using the raw.githubusercontent.com URL to get the JSON content
             const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${FILE_PATH}?t=${new Date().getTime()}`;
 
             try {
                 const response = await fetch(url);
-                if (!response.ok) throw new Error("File not found");
+                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
                 
                 fullDatabase = await response.json();
                 
-                // Sort Alphabetically: Church first, then Name
                 fullDatabase.sort((a, b) => {
                     if (a.church === b.church) return a.name.localeCompare(b.name);
                     return a.church.localeCompare(b.church);
@@ -95,9 +90,10 @@
                 renderTabs();
                 filterAndRender();
             } catch (err) {
-                console.error(err);
+                console.error("Fetch error:", err);
                 body.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: #ff4444;">
-                    Error: Could not connect to GitHub database. Ensure database.json exists.
+                    <strong>Error:</strong> Could not find database file at <code>${FILE_PATH}</code>.<br>
+                    Make sure you have committed the folder and file to GitHub.
                 </td></tr>`;
             }
         }
@@ -107,9 +103,9 @@
             const churches = ["All", ...new Set(fullDatabase.map(item => item.church))];
             
             tabsList.innerHTML = churches.map(church => `
-                <button class="btn ${currentFilter === church ? '' : 'btn-add'}" 
-                        style="width: auto; padding: 10px 18px; font-size: 0.85rem; margin: 0; 
-                               ${currentFilter === church ? 'background: var(--primary); border-color: var(--primary);' : 'background: var(--input-bg);'}"
+                <button class="btn" 
+                        style="width: auto; padding: 10px 18px; font-size: 0.85rem; cursor: pointer;
+                        ${currentFilter === church ? 'background: var(--primary); border: 1px solid var(--primary); color: white;' : 'background: var(--input-bg); border: 1px solid var(--border);'}"
                         onclick="setFilter('${church}')">
                     ${church}
                 </button>
@@ -173,9 +169,7 @@
             doc.save(`Dilaab_MasterList_${currentFilter}.pdf`);
         }
 
-        // Initialize on load
         window.onload = fetchCloudData;
     </script>
 </body>
-
 </html>
