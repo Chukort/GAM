@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="reg.css">
 </head>
 <body>
-g
+
 <div class="container">
     <header>
         <h2>Dilaab Camp 2026</h2>
@@ -65,15 +65,21 @@ g
 
 <script>
     // --- GITHUB CONFIGURATION ---
-    const GITHUB_TOKEN = "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"; 
-    const OWNER = "Chukort"; 
-    const REPO = "GAM"; 
-    const FILE_PATH = "database.json"; 
+    const GITHUB_TOKEN = "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"; // Put your token here
+    const OWNER = "Chukort";               // Put your GitHub username here
+    const REPO = "GAM";               // Put your repo name here
+    const FILE_PATH = "database.json";           // Same folder as this file
 
     function toggleOtherChurch(value) {
         const otherDiv = document.getElementById('otherDiv');
-        otherDiv.style.display = (value === 'Other') ? 'block' : 'none';
-        if (value === 'Other') document.getElementById('customChurch').focus();
+        if (value === 'Other') {
+            otherDiv.classList.remove('hidden');
+            otherDiv.style.display = 'block';
+            document.getElementById('customChurch').focus();
+        } else {
+            otherDiv.classList.add('hidden');
+            otherDiv.style.display = 'none';
+        }
     }
 
     function addRow() {
@@ -114,36 +120,33 @@ g
 
         if (newEntries.length === 0) return alert("Please enter at least one participant.");
 
+        // UI State: Loading
         btn.disabled = true;
-        btn.innerText = "Connecting to Cloud...";
+        btn.innerText = "Syncing to Cloud...";
 
         try {
-            // Using a timestamp to ensure we get the absolute latest version of the file (prevents SHA errors)
-            const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?t=${new Date().getTime()}`;
+            const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
             
             // 1. Get current file data
             const res = await fetch(url, {
-                headers: { 
-                    "Authorization": `token ${GITHUB_TOKEN}`,
-                    "Cache-Control": "no-cache" 
-                }
+                headers: { "Authorization": `token ${GITHUB_TOKEN}` }
             });
 
-            if (!res.ok) throw new Error("Could not find the database file. Check your Repo name.");
+            let currentData = [];
+            let sha = "";
 
-            const fileData = await res.json();
-            const sha = fileData.sha;
-            // Robust Decode (Handles special characters like Ñ or accent marks)
-            const currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+            if (res.ok) {
+                const fileData = await res.json();
+                sha = fileData.sha;
+                // Decode from Base64
+                currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+            }
 
-            // 2. Merge data
+            // 2. Add new data
             const updatedData = [...currentData, ...newEntries];
             
             // 3. Encode to Base64 (Unicode Safe)
-            const jsonString = JSON.stringify(updatedData, null, 2);
-            const updatedContent = btoa(unescape(encodeURIComponent(jsonString)));
-
-            btn.innerText = "Uploading Data...";
+            const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
 
             // 4. Update file on GitHub
             const putRes = await fetch(url, {
@@ -153,27 +156,21 @@ g
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    message: `Registration from ${church}`,
+                    message: `Registration: ${church}`,
                     content: updatedContent,
                     sha: sha
                 })
             });
 
-            const result = await putRes.json();
-
             if (putRes.ok) {
                 document.getElementById('successModal').classList.add('active');
             } else {
-                // Specific Error Messages
-                if(result.message.includes("does not match")) {
-                    throw new Error("Conflict: Someone else is registering at the same time. Please try again in 5 seconds.");
-                }
-                throw new Error(result.message || "GitHub rejected the update.");
+                throw new Error("GitHub API rejected the update.");
             }
 
         } catch (err) {
             console.error(err);
-            alert("Registration Failed: " + err.message);
+            alert("Error: " + err.message);
             btn.disabled = false;
             btn.innerText = "Submit Registration";
         }
@@ -187,4 +184,3 @@ g
 
 </body>
 </html>
-
