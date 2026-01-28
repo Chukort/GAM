@@ -96,85 +96,72 @@
         div.querySelector('input').focus();
     }
 
-    async function saveData() {
-        const btn = document.getElementById('submitBtn');
-        const churchSelect = document.getElementById('churchSelect');
-        let church = churchSelect.value === 'Other' ? document.getElementById('customChurch').value.trim() : churchSelect.value;
-        
-        if (!church) {
-            churchSelect.style.borderColor = 'var(--primary)';
-            return alert("Please select or specify your Local Church.");
-        }
+async function saveData() {
+    const btn = document.getElementById('submitBtn');
+    const churchSelect = document.getElementById('churchSelect');
+    let church = churchSelect.value === 'Other' ? document.getElementById('customChurch').value.trim() : churchSelect.value;
+    
+    if (!church) return alert("Please select a church.");
 
-        const nameInputs = document.querySelectorAll('.p-name');
-        let newEntries = [];
-        nameInputs.forEach(input => {
-            if (input.value.trim()) {
-                newEntries.push({
-                    church: church.toUpperCase(),
-                    name: input.value.trim().toUpperCase(),
-                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
-                });
-            }
+    const nameInputs = document.querySelectorAll('.p-name');
+    let newEntries = [];
+    nameInputs.forEach(input => {
+        if (input.value.trim()) {
+            newEntries.push({
+                church: church.toUpperCase(),
+                name: input.value.trim().toUpperCase(),
+                date: new Date().toLocaleDateString()
+            });
+        }
+    });
+
+    btn.disabled = true;
+    btn.innerText = "Connecting...";
+
+    try {
+        // We add a timestamp to the URL to force GitHub to give us the LATEST SHA
+        const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?t=${new Date().getTime()}`;
+        
+        const res = await fetch(url, {
+            headers: { "Authorization": `token ${GITHUB_TOKEN}` }
         });
 
-        if (newEntries.length === 0) return alert("Please enter at least one participant.");
+        if (!res.ok) throw new Error("Database file not found on GitHub. Create database.json with [] first.");
 
-        // UI State: Loading
-        btn.disabled = true;
-        btn.innerText = "Syncing to Cloud...";
+        const fileData = await res.json();
+        const sha = fileData.sha; 
+        const currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
 
-        try {
-            const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
-            
-            // 1. Get current file data
-            const res = await fetch(url, {
-                headers: { "Authorization": `token ${GITHUB_TOKEN}` }
-            });
+        const updatedData = [...currentData, ...newEntries];
+        const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
 
-            let currentData = [];
-            let sha = "";
+        const putRes = await fetch(url, {
+            method: "PUT",
+            headers: {
+                "Authorization": `token ${GITHUB_TOKEN}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                message: `Add ${newEntries.length} from ${church}`,
+                content: updatedContent,
+                sha: sha 
+            })
+        });
 
-            if (res.ok) {
-                const fileData = await res.json();
-                sha = fileData.sha;
-                // Decode from Base64
-                currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-            }
-
-            // 2. Add new data
-            const updatedData = [...currentData, ...newEntries];
-            
-            // 3. Encode to Base64 (Unicode Safe)
-            const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
-
-            // 4. Update file on GitHub
-            const putRes = await fetch(url, {
-                method: "PUT",
-                headers: {
-                    "Authorization": `token ${GITHUB_TOKEN}`,
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    message: `Registration: ${church}`,
-                    content: updatedContent,
-                    sha: sha
-                })
-            });
-
-            if (putRes.ok) {
-                document.getElementById('successModal').classList.add('active');
-            } else {
-                throw new Error("GitHub API rejected the update.");
-            }
-
-        } catch (err) {
-            console.error(err);
-            alert("Error: " + err.message);
-            btn.disabled = false;
-            btn.innerText = "Submit Registration";
+        if (putRes.ok) {
+            document.getElementById('successModal').classList.add('active');
+        } else {
+            const errorInfo = await putRes.json();
+            throw new Error(errorInfo.message);
         }
+
+    } catch (err) {
+        console.error(err);
+        alert("Rejected: " + err.message);
+        btn.disabled = false;
+        btn.innerText = "Submit Registration";
     }
+}
 
     function closeModal() {
         document.getElementById('successModal').classList.remove('active');
@@ -183,4 +170,5 @@
 </script>
 
 </body>
+
 </html>
