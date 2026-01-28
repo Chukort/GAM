@@ -65,21 +65,15 @@
 
 <script>
     // --- GITHUB CONFIGURATION ---
-    const GITHUB_TOKEN = "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"; // Put your token here
-    const OWNER = "Chukort";               // Put your GitHub username here
-    const REPO = "GAM";               // Put your repo name here
-    const FILE_PATH = "database.json";           // Same folder as this file
+    const GITHUB_TOKEN = "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"; 
+    const OWNER = "Chukort"; 
+    const REPO = "GAM"; 
+    const FILE_PATH = "database.json"; 
 
     function toggleOtherChurch(value) {
         const otherDiv = document.getElementById('otherDiv');
-        if (value === 'Other') {
-            otherDiv.classList.remove('hidden');
-            otherDiv.style.display = 'block';
-            document.getElementById('customChurch').focus();
-        } else {
-            otherDiv.classList.add('hidden');
-            otherDiv.style.display = 'none';
-        }
+        otherDiv.style.display = (value === 'Other') ? 'block' : 'none';
+        if (value === 'Other') document.getElementById('customChurch').focus();
     }
 
     function addRow() {
@@ -120,33 +114,36 @@
 
         if (newEntries.length === 0) return alert("Please enter at least one participant.");
 
-        // UI State: Loading
         btn.disabled = true;
-        btn.innerText = "Syncing to Cloud...";
+        btn.innerText = "Connecting to Cloud...";
 
         try {
-            const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+            // Using a timestamp to ensure we get the absolute latest version of the file (prevents SHA errors)
+            const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}?t=${new Date().getTime()}`;
             
             // 1. Get current file data
             const res = await fetch(url, {
-                headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+                headers: { 
+                    "Authorization": `token ${GITHUB_TOKEN}`,
+                    "Cache-Control": "no-cache" 
+                }
             });
 
-            let currentData = [];
-            let sha = "";
+            if (!res.ok) throw new Error("Could not find the database file. Check your Repo name.");
 
-            if (res.ok) {
-                const fileData = await res.json();
-                sha = fileData.sha;
-                // Decode from Base64
-                currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
-            }
+            const fileData = await res.json();
+            const sha = fileData.sha;
+            // Robust Decode (Handles special characters like Ñ or accent marks)
+            const currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
 
-            // 2. Add new data
+            // 2. Merge data
             const updatedData = [...currentData, ...newEntries];
             
             // 3. Encode to Base64 (Unicode Safe)
-            const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
+            const jsonString = JSON.stringify(updatedData, null, 2);
+            const updatedContent = btoa(unescape(encodeURIComponent(jsonString)));
+
+            btn.innerText = "Uploading Data...";
 
             // 4. Update file on GitHub
             const putRes = await fetch(url, {
@@ -156,21 +153,27 @@
                     "Content-Type": "application/json"
                 },
                 body: JSON.stringify({
-                    message: `Registration: ${church}`,
+                    message: `Registration from ${church}`,
                     content: updatedContent,
                     sha: sha
                 })
             });
 
+            const result = await putRes.json();
+
             if (putRes.ok) {
                 document.getElementById('successModal').classList.add('active');
             } else {
-                throw new Error("GitHub API rejected the update.");
+                // Specific Error Messages
+                if(result.message.includes("does not match")) {
+                    throw new Error("Conflict: Someone else is registering at the same time. Please try again in 5 seconds.");
+                }
+                throw new Error(result.message || "GitHub rejected the update.");
             }
 
         } catch (err) {
             console.error(err);
-            alert("Error: " + err.message);
+            alert("Registration Failed: " + err.message);
             btn.disabled = false;
             btn.innerText = "Submit Registration";
         }
