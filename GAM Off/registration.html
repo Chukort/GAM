@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dilaab Camp Registration</title>
+    <style>
+        :root { --primary: #d90429; --secondary: #2b2d42; --bg: #edf2f4; }
+        body { font-family: 'Inter', sans-serif; background: var(--bg); padding: 20px; }
+        .container { max-width: 600px; margin: auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        h2 { color: var(--secondary); margin-top: 0; text-transform: uppercase; }
+        .form-group { margin-bottom: 20px; }
+        label { display: block; font-weight: 600; margin-bottom: 8px; }
+        select, input { width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 6px; box-sizing: border-box; }
+        .participant-entry { display: flex; gap: 10px; margin-bottom: 10px; align-items: center; }
+        .btn { padding: 12px 24px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; width: 100%; transition: 0.2s; }
+        .btn-add { background: var(--secondary); color: white; margin-bottom: 10px; }
+        .btn-submit { background: var(--primary); color: white; font-size: 1.1rem; }
+        .btn-remove { background: #ff4d4d; color: white; width: 45px; padding: 12px 0; flex-shrink: 0; }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Dilaab Camp 2026</h2>
+    <p>Register your delegation below.</p>
+    
+    <div class="form-group">
+        <label>Church Name</label>
+        <select id="churchSelect" onchange="document.getElementById('otherDiv').classList.toggle('hidden', this.value !== 'Other')">
+            <option value="">-- Choose Local Church --</option>
+            <option value="GAM CANLAON">GAM CANLAON</option>
+            <option value="GAM SAN CARLOS">GAM SAN CARLOS</option>
+            <option value="GAM PAMPLONA">GAM PAMPLONA</option>
+            <option value="GAM SAN JOSE">GAM SAN JOSE</option>
+            <option value="GAM DUMAGUETE">GAM DUMAGUETE</option>
+            <option value="HOPE CITY - GAM">HOPE CITY - GAM</option>
+            <option value="Other">Other</option>
+        </select>
+    </div>
+
+    <div id="otherDiv" class="form-group hidden">
+        <label>Please specify Church Name</label>
+        <input type="text" id="customChurch" placeholder="Enter church name">
+    </div>
+
+    <div id="list" class="form-group">
+        <label>Participants</label>
+        <div class="participant-entry">
+            <input type="text" class="p-name" placeholder="Full Name" required>
+            <div style="width: 45px;"></div> </div>
+    </div>
+
+    <button type="button" class="btn btn-add" onclick="addRow()">+ Add More Person</button>
+    <button type="button" class="btn btn-submit" onclick="saveData()">Submit Registration</button>
+</div>
+
+<script>
+    function addRow() {
+        const div = document.createElement('div');
+        div.className = 'participant-entry';
+        div.innerHTML = `
+            <input type="text" class="p-name" placeholder="Full Name" required>
+            <button class="btn btn-remove" onclick="this.parentElement.remove()">✕</button>
+        `;
+        document.getElementById('list').appendChild(div);
+    }
+
+    function saveData() {
+        const churchSelect = document.getElementById('churchSelect').value;
+        const church = churchSelect === 'Other' ? 
+                       document.getElementById('customChurch').value : churchSelect;
+        
+        if (!church || (churchSelect === 'Other' && !church.trim())) {
+            return alert("Please select or type your church name.");
+        }
+
+        const names = document.querySelectorAll('.p-name');
+        let currentData = JSON.parse(localStorage.getItem('campData')) || [];
+        let addedCount = 0;
+
+        names.forEach(input => {
+            if (input.value.trim()) {
+                currentData.push({
+                    church: church,
+                    name: input.value.trim(),
+                    date: new Date().toLocaleDateString()
+                });
+                addedCount++;
+            }
+        });
+
+        if (addedCount === 0) return alert("Please enter at least one participant name.");
+
+        localStorage.setItem('campData', JSON.stringify(currentData));
+        alert("Registration saved successfully for " + addedCount + " participant(s)!");
+        location.reload(); 
+    }
+</script>
+</body>
+</html>
