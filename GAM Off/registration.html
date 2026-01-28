@@ -31,11 +31,11 @@
         <input type="text" id="customChurch" placeholder="Enter church name">
     </div>
 
-    <div id="list" class="form-group">
+    <div id="list" class="form-group" style="margin-top: 20px;">
         <label>Participants</label>
         <div class="participant-entry">
             <input type="text" class="p-name" placeholder="Full Name" required>
-            <div style="width: 48px;"></div>
+            <div style="width: 45px;"></div>
         </div>
     </div>
 
@@ -83,7 +83,7 @@
             if (input.value.trim()) {
                 currentData.push({
                     church: church.toUpperCase(),
-                    name: input.value.trim().toUpperCase(), // Auto-capitalize for clean PDF
+                    name: input.value.trim().toUpperCase(),
                     date: new Date().toLocaleDateString()
                 });
                 addedCount++;
@@ -91,20 +91,14 @@
         });
 
         if (addedCount === 0) return alert("Please enter at least one participant name.");
-        
         localStorage.setItem('campData', JSON.stringify(currentData));
-        
-        // Show the Premium Modal instead of Alert
         document.getElementById('successModal').classList.add('active');
     }
 
     function closeModal() {
         document.getElementById('successModal').classList.remove('active');
-        setTimeout(() => {
-            location.reload(); 
-        }, 400);
+        setTimeout(() => { location.reload(); }, 400);
     }
 </script>
 </body>
-
 </html>

@@ -15,16 +15,16 @@
                 <h2>Dilaab Camp 2026</h2>
                 <p>Admin Master List</p>
             </div>
-            <div class="stats-badge" id="statsBadge" style="margin-bottom: 20px;">
-                Total: <span id="totalCount">0</span>
+            <div class="stats-badge" style="margin-bottom: 20px; background: var(--border); padding: 10px 20px; border-radius: 12px; font-weight: 700;">
+                Total: <span id="totalCount" style="color: var(--primary);">0</span>
             </div>
         </div>
 
-        <div class="tabs-container" id="tabsList"></div>
+        <div class="tabs-container" id="tabsList" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"></div>
 
-        <div class="controls">
-            <button class="btn btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
-            <button class="btn btn-clear" onclick="clearData()">Clear All Records</button>
+        <div class="controls" style="display: flex; gap: 10px; margin-bottom: 20px;">
+            <button class="btn btn-submit" style="background: #10b981;" onclick="downloadPDF()">📄 Download PDF</button>
+            <button class="btn btn-add" style="margin: 0;" onclick="clearData()">Clear All Records</button>
         </div>
 
         <div class="table-responsive">
@@ -74,12 +74,12 @@
             
             body.innerHTML = filteredData.length ? filteredData.map((item, i) => `
                 <tr>
-                    <td>${i + 1}</td>
-                    <td>${item.church}</td>
-                    <td>${item.name}</td>
-                    <td>${item.date}</td>
+                    <td data-label="#">${i + 1}</td>
+                    <td data-label="Church">${item.church}</td>
+                    <td data-label="Name">${item.name}</td>
+                    <td data-label="Date">${item.date}</td>
                 </tr>
-            `).join('') : '<tr><td colspan="4" class="no-data">No records found.</td></tr>';
+            `).join('') : '<tr><td colspan="4" style="text-align: center; padding: 40px;">No records found.</td></tr>';
         }
 
         function downloadPDF() {
@@ -99,5 +99,4 @@
         window.onload = loadData;
     </script>
 </body>
-
 </html>
