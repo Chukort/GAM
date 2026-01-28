@@ -63,41 +63,47 @@
     </div>
 
     <script>
-        // --- GITHUB CONFIGURATION ---
+// --- GITHUB CONFIGURATION ---
 const OWNER = "Chukort";
 const REPO = "GAM"; 
-// Update this to include the "GAM OFF" folder prefix
-const FILE_PATH = "./db/database.json";
+// We use the full path from the root. 
+// Note: "GAM OFF" becomes "GAM%20OFF" in a URL.
+const FILE_PATH = "GAM%20OFF/db/database.json"; 
 
-        let fullDatabase = [];
-        let currentFilter = "All";
+async function fetchCloudData() {
+    const body = document.getElementById('adminBody');
+    
+    // Constructing the absolute URL to the Raw content
+    const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${FILE_PATH}?t=${new Date().getTime()}`;
 
-        async function fetchCloudData() {
-            const body = document.getElementById('adminBody');
-            // Using the raw.githubusercontent.com URL to get the JSON content
-            const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${FILE_PATH}?t=${new Date().getTime()}`;
-
-            try {
-                const response = await fetch(url);
-                if (!response.ok) throw new Error(`HTTP Error: ${response.status}`);
-                
-                fullDatabase = await response.json();
-                
-                fullDatabase.sort((a, b) => {
-                    if (a.church === b.church) return a.name.localeCompare(b.name);
-                    return a.church.localeCompare(b.church);
-                });
-
-                renderTabs();
-                filterAndRender();
-            } catch (err) {
-                console.error("Fetch error:", err);
-                body.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: #ff4444;">
-                    <strong>Error:</strong> Could not find database file at <code>${FILE_PATH}</code>.<br>
-                    Make sure you have committed the folder and file to GitHub.
-                </td></tr>`;
-            }
+    try {
+        console.log("Fetching from:", url); // This helps you debug in the F12 console
+        const response = await fetch(url);
+        
+        if (!response.ok) {
+            throw new Error(`Status ${response.status}: Check if the path "${FILE_PATH}" is correct on GitHub.`);
         }
+        
+        fullDatabase = await response.json();
+        
+        // ... rest of your sorting and rendering code ...
+        fullDatabase.sort((a, b) => {
+            if (a.church === b.church) return a.name.localeCompare(b.name);
+            return a.church.localeCompare(b.church);
+        });
+
+        renderTabs();
+        filterAndRender();
+
+    } catch (err) {
+        console.error("Fetch error:", err);
+        body.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: #ff4444;">
+            <strong>Connection Error</strong><br>
+            Path: <code>${FILE_PATH}</code><br>
+            <small>${err.message}</small>
+        </td></tr>`;
+    }
+}
 
         function renderTabs() {
             const tabsList = document.getElementById('tabsList');
@@ -174,6 +180,7 @@ const FILE_PATH = "./db/database.json";
     </script>
 </body>
 </html>
+
 
 
 
