@@ -66,27 +66,27 @@ sss
 // --- GITHUB CONFIGURATION ---
 const OWNER = "Chukort";
 const REPO = "GAM"; 
-// We use the full path from the root. 
-// Note: "GAM OFF" becomes "GAM%20OFF" in a URL.
-const FILE_PATH = "GAM%20OFF/db/database.json"; 
+// Updated to your new folder name 'Gam'
+const FILE_PATH = "Gam/db/database.json"; 
 
 async function fetchCloudData() {
     const body = document.getElementById('adminBody');
     
-    // Constructing the absolute URL to the Raw content
+    // Construct the Raw URL
+    // We use /main/ (check if your branch is named 'main' or 'master')
     const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${FILE_PATH}?t=${new Date().getTime()}`;
 
     try {
-        console.log("Fetching from:", url); // This helps you debug in the F12 console
+        console.log("Requesting URL:", url);
         const response = await fetch(url);
         
         if (!response.ok) {
-            throw new Error(`Status ${response.status}: Check if the path "${FILE_PATH}" is correct on GitHub.`);
+            throw new Error(`HTTP ${response.status}: Check if "Gam/db/database.json" exists on GitHub.`);
         }
         
         fullDatabase = await response.json();
         
-        // ... rest of your sorting and rendering code ...
+        // Sort and Render
         fullDatabase.sort((a, b) => {
             if (a.church === b.church) return a.name.localeCompare(b.name);
             return a.church.localeCompare(b.church);
@@ -98,13 +98,12 @@ async function fetchCloudData() {
     } catch (err) {
         console.error("Fetch error:", err);
         body.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: #ff4444;">
-            <strong>Connection Error</strong><br>
-            Path: <code>${FILE_PATH}</code><br>
+            <strong>Database Error</strong><br>
+            <small>Could not find file at: ${FILE_PATH}</small><br>
             <small>${err.message}</small>
         </td></tr>`;
     }
 }
-
         function renderTabs() {
             const tabsList = document.getElementById('tabsList');
             const churches = ["All", ...new Set(fullDatabase.map(item => item.church))];
@@ -180,6 +179,7 @@ async function fetchCloudData() {
     </script>
 </body>
 </html>
+
 
 
 
