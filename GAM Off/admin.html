@@ -4,169 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Dilaab Camp Master List</title>
+    <link rel="stylesheet" href="Reg.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <style>
-        :root { --primary: #2b2d42; --accent: #d90429; --bg: #edf2f4; }
-        body { font-family: 'Inter', sans-serif; background: var(--bg); padding: 20px; color: var(--primary); }
-        .container { max-width: 1100px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
-        
-        .header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #eee; margin-bottom: 20px; padding-bottom: 10px; }
-        .stats-badge { background: var(--accent); color: white; padding: 8px 15px; border-radius: 20px; font-weight: bold; }
-
-        /* Tabs Styling */
-        .tabs-container { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 20px; border-bottom: 1px solid #ddd; padding-bottom: 10px; }
-        .tab { padding: 8px 16px; background: #e2e8f0; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 0.9rem; transition: 0.3s; border: none; }
-        .tab.active { background: var(--primary); color: white; }
-        .tab:hover:not(.active) { background: #cbd5e1; }
-
-        .controls { display: flex; gap: 10px; margin-bottom: 20px; align-items: center; }
-        .btn { padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; transition: 0.3s; }
-        .btn-pdf { background: #1d6f42; color: white; }
-        .btn-clear { background: #8d99ae; color: white; margin-left: auto; }
-        .btn:hover { opacity: 0.8; }
-
-        table { width: 100%; border-collapse: collapse; background: white; }
-        th, td { border: 1px solid #ddd; padding: 12px; text-align: left; }
-        th { background: var(--primary); color: white; text-transform: uppercase; font-size: 0.85rem; }
-        
-        tr td:nth-child(2) { font-weight: 700; color: #1d3557; }
-        tr:nth-child(even) { background: #f8f9fa; }
-        
-        .no-data { text-align: center; padding: 40px; color: #888; font-style: italic; }
-    </style>
 </head>
 <body>
-
-<div class="container">
-    <div class="header">
-        <div>
-            <h2 style="margin:0">Dilaab Camp 2026</h2>
-            <p style="margin:0; color:#666;">Admin Master List</p>
-        </div>
-        <div class="stats-badge">Participants: <span id="totalCount">0</span></div>
-    </div>
-
-    <div class="tabs-container" id="tabsList">
+    <div class="container" style="max-width: 1000px;">
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+            <div>
+                <h2>Dilaab Camp 2026</h2>
+                <p>Admin Master List</p>
+            </div>
+            <div class="stats-badge" id="statsBadge" style="margin-bottom: 20px;">
+                Total: <span id="totalCount">0</span>
+            </div>
         </div>
 
-    <div class="controls">
-        <button class="btn btn-pdf" onclick="downloadPDF()">downloadPDF</button>
-        <button class="btn btn-clear" onclick="clearData()">Clear All Records</button>
+        <div class="tabs-container" id="tabsList"></div>
+
+        <div class="controls">
+            <button class="btn btn-pdf" onclick="downloadPDF()">📄 Download PDF</button>
+            <button class="btn btn-clear" onclick="clearData()">Clear All Records</button>
+        </div>
+
+        <div class="table-responsive">
+            <table id="adminTable">
+                <thead>
+                    <tr>
+                        <th style="width: 50px;">#</th>
+                        <th>Church Name</th>
+                        <th>Participant Name</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody id="adminBody"></tbody>
+            </table>
+        </div>
     </div>
 
-    <div style="overflow-x: auto;">
-        <table id="adminTable">
-            <thead>
-                <tr>
-                    <th style="width: 50px;">#</th>
-                    <th>Church Name</th>
-                    <th>Participant Name</th>
-                    <th>Registration Date</th>
-                </tr>
-            </thead>
-            <tbody id="adminBody">
-                </tbody>
-        </table>
-    </div>
-</div>
+    <script>
+        let currentFilter = "All";
 
-<script>
-    let currentFilter = "All";
-
-    function loadData() {
-        const data = JSON.parse(localStorage.getItem('campData')) || [];
-        
-        // Sort Data Alphabetically
-        data.sort((a, b) => {
-            if (a.church.toUpperCase() < b.church.toUpperCase()) return -1;
-            if (a.church.toUpperCase() > b.church.toUpperCase()) return 1;
-            if (a.name.toUpperCase() < b.name.toUpperCase()) return -1;
-            if (a.name.toUpperCase() > b.name.toUpperCase()) return 1;
-            return 0;
-        });
-
-        renderTabs(data);
-        renderTable(data);
-    }
-
-    function renderTabs(data) {
-        const tabsList = document.getElementById('tabsList');
-        const churches = ["All", ...new Set(data.map(item => item.church))];
-        
-        tabsList.innerHTML = churches.map(church => `
-            <button class="tab ${currentFilter === church ? 'active' : ''}" 
-                    onclick="setFilter('${church}')">
-                ${church}
-            </button>
-        `).join('');
-    }
-
-    function setFilter(church) {
-        currentFilter = church;
-        const data = JSON.parse(localStorage.getItem('campData')) || [];
-        loadData(); // Re-render everything
-    }
-
-    function renderTable(data) {
-        const body = document.getElementById('adminBody');
-        const countSpan = document.getElementById('totalCount');
-        
-        const filteredData = currentFilter === "All" 
-            ? data 
-            : data.filter(item => item.church === currentFilter);
-
-        countSpan.innerText = filteredData.length;
-        body.innerHTML = "";
-
-        if (filteredData.length === 0) {
-            body.innerHTML = '<tr><td colspan="4" class="no-data">No participants found for this view.</td></tr>';
-            return;
+        function loadData() {
+            const data = JSON.parse(localStorage.getItem('campData')) || [];
+            data.sort((a, b) => a.church.localeCompare(b.church) || a.name.localeCompare(b.name));
+            renderTabs(data);
+            renderTable(data);
         }
 
-        filteredData.forEach((item, i) => {
-            body.innerHTML += `
+        function renderTabs(data) {
+            const tabsList = document.getElementById('tabsList');
+            const churches = ["All", ...new Set(data.map(item => item.church))];
+            tabsList.innerHTML = churches.map(church => `
+                <button class="tab ${currentFilter === church ? 'active' : ''}" onclick="setFilter('${church}')">
+                    ${church}
+                </button>
+            `).join('');
+        }
+
+        function setFilter(church) {
+            currentFilter = church;
+            loadData();
+        }
+
+        function renderTable(data) {
+            const body = document.getElementById('adminBody');
+            const filteredData = currentFilter === "All" ? data : data.filter(item => item.church === currentFilter);
+            document.getElementById('totalCount').innerText = filteredData.length;
+            
+            body.innerHTML = filteredData.length ? filteredData.map((item, i) => `
                 <tr>
                     <td>${i + 1}</td>
                     <td>${item.church}</td>
                     <td>${item.name}</td>
                     <td>${item.date}</td>
                 </tr>
-            `;
-        });
-    }
-
-    function downloadPDF() {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        
-        doc.setFontSize(18);
-        doc.text(`Dilaab Camp 2026 - ${currentFilter} List`, 14, 15);
-        
-        doc.setFontSize(10);
-        doc.setTextColor(100);
-        doc.text(`Total: ${document.getElementById('totalCount').innerText} participants`, 14, 22);
-
-        doc.autoTable({
-            html: '#adminTable',
-            startY: 30,
-            theme: 'grid',
-            headStyles: { fillColor: [43, 45, 66] }
-        });
-
-        doc.save(`Dilaab_Camp_${currentFilter.replace(/ /g, "_")}.pdf`);
-    }
-
-    function clearData() {
-        if(confirm("⚠️ This will delete EVERYTHING. Are you sure?")) {
-            localStorage.removeItem('campData');
-            currentFilter = "All";
-            loadData();
+            `).join('') : '<tr><td colspan="4" class="no-data">No records found.</td></tr>';
         }
-    }
 
-    window.onload = loadData;
-</script>
+        function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            doc.text(`Dilaab Camp 2026 - ${currentFilter} List`, 14, 15);
+            doc.autoTable({ html: '#adminTable', startY: 25, theme: 'grid' });
+            doc.save(`Dilaab_Camp_${currentFilter}.pdf`);
+        }
 
+        function clearData() {
+            if(confirm("Permanently delete all records?")) {
+                localStorage.removeItem('campData');
+                location.reload();
+            }
+        }
+        window.onload = loadData;
+    </script>
 </body>
 </html>
