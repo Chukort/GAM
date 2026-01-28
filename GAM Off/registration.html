@@ -12,9 +12,9 @@
     <h2>Dilaab Camp 2026</h2>
     <p>Register your delegation below.</p>
     
-    <div class="form-group">
-        <label>Church Name</label>
-        <select id="churchSelect" onchange="document.getElementById('otherDiv').classList.toggle('hidden', this.value !== 'Other')">
+    <div class="form-group" style="margin-bottom: 20px;">
+        <label for="churchSelect">Local Church</label>
+        <select id="churchSelect" onchange="toggleOtherChurch(this.value)">
             <option value="">-- Choose Local Church --</option>
             <option value="GAM CANLAON">GAM CANLAON</option>
             <option value="GAM SAN CARLOS">GAM SAN CARLOS</option>
@@ -22,83 +22,129 @@
             <option value="GAM SAN JOSE">GAM SAN JOSE</option>
             <option value="GAM DUMAGUETE">GAM DUMAGUETE</option>
             <option value="HOPE CITY - GAM">HOPE CITY - GAM</option>
-            <option value="Other">Other</option>
+            <option value="Other">Other (Specify below)</option>
         </select>
     </div>
 
-    <div id="otherDiv" class="form-group hidden">
-        <label>Specify Church Name</label>
+    <div id="otherDiv" class="form-group hidden" style="margin-bottom: 20px; animation: slideInLeft 0.3s ease-out;">
+        <label for="customChurch">Specify Church Name</label>
         <input type="text" id="customChurch" placeholder="Enter church name">
     </div>
 
-    <div id="list" class="form-group" style="margin-top: 20px;">
-        <label>Participants</label>
+    <div id="list" class="form-group" style="margin-top: 25px;">
+        <label>Delegation Participants</label>
         <div class="participant-entry">
-            <input type="text" class="p-name" placeholder="Full Name" required>
-            <div style="width: 45px;"></div>
+            <input type="text" class="p-name" placeholder="Full Name (e.g. Juan Dela Cruz)" required>
+            <div style="width: 48px; flex-shrink: 0;"></div>
         </div>
     </div>
 
-    <button type="button" class="btn btn-add" onclick="addRow()">+ Add More Person</button>
-    <button type="button" class="btn btn-submit" onclick="saveData()">Submit Registration</button>
+    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+        <button type="button" class="btn btn-add" onclick="addRow()">+ Add Another Person</button>
+        <button type="button" class="btn btn-submit" onclick="saveData()">Submit Registration</button>
+    </div>
 </div>
 
 <div class="modal-overlay" id="successModal">
     <div class="modal-content">
         <span class="modal-icon">🔥</span>
-        <h2 style="background: none; -webkit-text-fill-color: var(--text-main);">Thank You For Registering!</h2>
-        <p style="color: var(--text-main); margin-bottom: 10px;">We are excited in the Lord to see you at the upcoming</p>
-        <h3 style="color: white; margin: 5px 0;">DILAAB CAMP 2026</h3>
-        <span class="theme-text">Theme: TUTOK</span>
-        <span class="scripture-text">Hebrews 12:2</span>
-        <br><br>
-        <button class="btn btn-submit" onclick="closeModal()">God Bless!</button>
+        <h2 style="background: none; -webkit-text-fill-color: var(--text-main); margin-bottom: 15px;">Registration Successful!</h2>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">We are excited in the Lord to see you and your delegation at</p>
+        
+        <div style="padding: 20px; background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 25px;">
+            <h3 style="color: white; margin: 0; letter-spacing: 2px;">DILAAB CAMP 2026</h3>
+            <span class="theme-text">Theme: TUTOK</span>
+            <span class="scripture-text">Hebrews 12:2</span>
+        </div>
+        
+        <button class="btn btn-submit" onclick="closeModal()">Praise God!</button>
     </div>
 </div>
 
 <script>
-    function addRow() {
-        const div = document.createElement('div');
-        div.className = 'participant-entry';
-        div.innerHTML = `
-            <input type="text" class="p-name" placeholder="Full Name" required>
-            <button class="btn btn-remove" onclick="this.parentElement.remove()">✕</button>
-        `;
-        document.getElementById('list').appendChild(div);
+    // Toggle the "Other" church input field
+    function toggleOtherChurch(value) {
+        const otherDiv = document.getElementById('otherDiv');
+        if (value === 'Other') {
+            otherDiv.classList.remove('hidden');
+            document.getElementById('customChurch').focus();
+        } else {
+            otherDiv.classList.add('hidden');
+        }
     }
 
-    function saveData() {
-        const churchSelect = document.getElementById('churchSelect').value;
-        const church = churchSelect === 'Other' ? document.getElementById('customChurch').value : churchSelect;
+    // Add a new participant row
+    function addRow() {
+        const list = document.getElementById('list');
+        const div = document.createElement('div');
+        div.className = 'participant-entry';
+        div.style.marginTop = "10px";
+        div.innerHTML = `
+            <input type="text" class="p-name" placeholder="Full Name" required>
+            <button class="btn btn-remove" onclick="this.parentElement.remove()" title="Remove">✕</button>
+        `;
+        list.appendChild(div);
         
-        if (!church || (churchSelect === 'Other' && !church.trim())) {
-            return alert("Please select or type your church name.");
+        // Auto-focus the new input
+        div.querySelector('input').focus();
+    }
+
+    // Save data to LocalStorage
+    function saveData() {
+        const churchSelect = document.getElementById('churchSelect');
+        let church = churchSelect.value;
+        
+        if (church === 'Other') {
+            church = document.getElementById('customChurch').value.trim();
+        }
+        
+        // Validation: Church
+        if (!church) {
+            churchSelect.style.borderColor = 'var(--primary)';
+            alert("Please select or specify your Local Church.");
+            return;
         }
 
-        const names = document.querySelectorAll('.p-name');
+        const nameInputs = document.querySelectorAll('.p-name');
         let currentData = JSON.parse(localStorage.getItem('campData')) || [];
         let addedCount = 0;
 
-        names.forEach(input => {
-            if (input.value.trim()) {
+        // Validation & Collection: Names
+        nameInputs.forEach(input => {
+            const nameValue = input.value.trim();
+            if (nameValue) {
                 currentData.push({
                     church: church.toUpperCase(),
-                    name: input.value.trim().toUpperCase(),
-                    date: new Date().toLocaleDateString()
+                    name: nameValue.toUpperCase(),
+                    date: new Date().toLocaleDateString('en-US', { 
+                        month: 'short', 
+                        day: 'numeric', 
+                        year: 'numeric' 
+                    })
                 });
                 addedCount++;
             }
         });
 
-        if (addedCount === 0) return alert("Please enter at least one participant name.");
+        if (addedCount === 0) {
+            alert("Please enter at least one participant name.");
+            return;
+        }
+
+        // Store and Show Success
         localStorage.setItem('campData', JSON.stringify(currentData));
         document.getElementById('successModal').classList.add('active');
     }
 
+    // Close modal and refresh page
     function closeModal() {
-        document.getElementById('successModal').classList.remove('active');
-        setTimeout(() => { location.reload(); }, 400);
+        const modal = document.getElementById('successModal');
+        modal.style.opacity = '0';
+        setTimeout(() => {
+            location.reload();
+        }, 400);
     }
 </script>
+
 </body>
 </html>

@@ -9,22 +9,25 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <div class="container" style="max-width: 1000px;">
-        <div class="header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+    <div class="container">
+        <div class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
             <div>
                 <h2>Dilaab Camp 2026</h2>
-                <p>Admin Master List</p>
+                <p>Master Registration Database</p>
             </div>
-            <div class="stats-badge" style="margin-bottom: 20px; background: var(--border); padding: 10px 20px; border-radius: 12px; font-weight: 700;">
-                Total: <span id="totalCount" style="color: var(--primary);">0</span>
+            <div class="stats-badge" style="background: var(--input-bg); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); font-weight: 700;">
+                TOTAL: <span id="totalCount" style="color: var(--primary);">0</span>
             </div>
         </div>
 
-        <div class="tabs-container" id="tabsList" style="display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 20px;"></div>
+        <label>Filter by Church</label>
+        <div class="tabs-container" id="tabsList" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
+            </div>
 
-        <div class="controls" style="display: flex; gap: 10px; margin-bottom: 20px;">
-            <button class="btn btn-submit" style="background: #10b981;" onclick="downloadPDF()">📄 Download PDF</button>
-            <button class="btn btn-add" style="margin: 0;" onclick="clearData()">Clear All Records</button>
+        <div class="controls" style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
+            <input type="text" id="searchInput" placeholder="Search participant name..." onkeyup="loadData()" style="flex: 2; min-width: 200px;">
+            <button class="btn" style="background: #10b981; flex: 1;" onclick="downloadPDF()">📄 Export PDF</button>
+            <button class="btn btn-remove" style="width: auto; padding: 0 20px;" onclick="clearData()" title="Clear All Records">Reset</button>
         </div>
 
         <div class="table-responsive">
@@ -34,10 +37,11 @@
                         <th style="width: 50px;">#</th>
                         <th>Church Name</th>
                         <th>Participant Name</th>
-                        <th>Date</th>
+                        <th>Date Registered</th>
                     </tr>
                 </thead>
-                <tbody id="adminBody"></tbody>
+                <tbody id="adminBody">
+                    </tbody>
             </table>
         </div>
     </div>
@@ -45,18 +49,37 @@
     <script>
         let currentFilter = "All";
 
+        /**
+         * Core Data Loader: Sorts, Filters, and Renders everything
+         */
         function loadData() {
-            const data = JSON.parse(localStorage.getItem('campData')) || [];
-            data.sort((a, b) => a.church.localeCompare(b.church) || a.name.localeCompare(b.name));
-            renderTabs(data);
-            renderTable(data);
+            const rawData = JSON.parse(localStorage.getItem('campData')) || [];
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+
+            // 1. Sort Data Alphabetically
+            rawData.sort((a, b) => a.church.localeCompare(b.church) || a.name.localeCompare(b.name));
+
+            // 2. Extract Unique Churches for Tabs
+            renderTabs(rawData);
+
+            // 3. Filter based on Tab and Search Input
+            const filteredData = rawData.filter(item => {
+                const matchesTab = (currentFilter === "All" || item.church === currentFilter);
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                return matchesTab && matchesSearch;
+            });
+
+            renderTable(filteredData);
         }
 
         function renderTabs(data) {
             const tabsList = document.getElementById('tabsList');
             const churches = ["All", ...new Set(data.map(item => item.church))];
+            
             tabsList.innerHTML = churches.map(church => `
-                <button class="tab ${currentFilter === church ? 'active' : ''}" onclick="setFilter('${church}')">
+                <button class="btn ${currentFilter === church ? '' : 'btn-add'}" 
+                        style="width: auto; padding: 8px 16px; font-size: 0.8rem; margin: 0; ${currentFilter === church ? 'background: var(--primary);' : ''}"
+                        onclick="setFilter('${church}')">
                     ${church}
                 </button>
             `).join('');
@@ -69,33 +92,52 @@
 
         function renderTable(data) {
             const body = document.getElementById('adminBody');
-            const filteredData = currentFilter === "All" ? data : data.filter(item => item.church === currentFilter);
-            document.getElementById('totalCount').innerText = filteredData.length;
+            document.getElementById('totalCount').innerText = data.length;
             
-            body.innerHTML = filteredData.length ? filteredData.map((item, i) => `
+            if (data.length === 0) {
+                body.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">No matching records found.</td></tr>';
+                return;
+            }
+
+            body.innerHTML = data.map((item, i) => `
                 <tr>
-                    <td data-label="#">${i + 1}</td>
-                    <td data-label="Church">${item.church}</td>
-                    <td data-label="Name">${item.name}</td>
-                    <td data-label="Date">${item.date}</td>
+                    <td>${i + 1}</td>
+                    <td><span style="color: var(--primary); font-weight: 600;">${item.church}</span></td>
+                    <td style="text-transform: uppercase;">${item.name}</td>
+                    <td style="color: var(--text-muted); font-size: 0.85rem;">${item.date}</td>
                 </tr>
-            `).join('') : '<tr><td colspan="4" style="text-align: center; padding: 40px;">No records found.</td></tr>';
+            `).join('');
         }
 
         function downloadPDF() {
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
+            
+            doc.setFontSize(18);
             doc.text(`Dilaab Camp 2026 - ${currentFilter} List`, 14, 15);
-            doc.autoTable({ html: '#adminTable', startY: 25, theme: 'grid' });
-            doc.save(`Dilaab_Camp_${currentFilter}.pdf`);
+            
+            doc.setFontSize(10);
+            doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 22);
+
+            doc.autoTable({ 
+                html: '#adminTable', 
+                startY: 28,
+                theme: 'grid',
+                headStyles: { fillColor: [255, 31, 68] }, // Matches your primary crimson
+                styles: { cellPadding: 3, fontSize: 9 }
+            });
+
+            doc.save(`Dilaab_Camp_${currentFilter.replace(/\s+/g, '_')}.pdf`);
         }
 
         function clearData() {
-            if(confirm("Permanently delete all records?")) {
+            if(confirm("DANGER: This will permanently delete ALL registration records from this device. Proceed?")) {
                 localStorage.removeItem('campData');
                 location.reload();
             }
         }
+
+        // Initialize on load
         window.onload = loadData;
     </script>
 </body>
