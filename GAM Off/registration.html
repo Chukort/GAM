@@ -9,8 +9,10 @@
 <body>
 
 <div class="container">
-    <h2>Dilaab Camp 2026</h2>
-    <p>Register your delegation below.</p>
+    <header>
+        <h2>Dilaab Camp 2026</h2>
+        <p>Register your delegation below.</p>
+    </header>
     
     <div class="form-group" style="margin-bottom: 20px;">
         <label for="churchSelect">Local Church</label>
@@ -26,9 +28,9 @@
         </select>
     </div>
 
-    <div id="otherDiv" class="form-group hidden" style="margin-bottom: 20px; animation: slideInLeft 0.3s ease-out;">
+    <div id="otherDiv" class="form-group hidden" style="margin-bottom: 20px;">
         <label for="customChurch">Specify Church Name</label>
-        <input type="text" id="customChurch" placeholder="Enter church name">
+        <input type="text" id="customChurch" placeholder="Type your church name here...">
     </div>
 
     <div id="list" class="form-group" style="margin-top: 25px;">
@@ -39,7 +41,7 @@
         </div>
     </div>
 
-    <div style="margin-top: 20px; display: flex; flex-direction: column; gap: 10px;">
+    <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 12px;">
         <button type="button" class="btn btn-add" onclick="addRow()">+ Add Another Person</button>
         <button type="button" class="btn btn-submit" onclick="saveData()">Submit Registration</button>
     </div>
@@ -49,7 +51,7 @@
     <div class="modal-content">
         <span class="modal-icon">🔥</span>
         <h2 style="background: none; -webkit-text-fill-color: var(--text-main); margin-bottom: 15px;">Registration Successful!</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">We are excited in the Lord to see you and your delegation at</p>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Your delegation has been added to the master list.</p>
         
         <div style="padding: 20px; background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 25px;">
             <h3 style="color: white; margin: 0; letter-spacing: 2px;">DILAAB CAMP 2026</h3>
@@ -62,34 +64,44 @@
 </div>
 
 <script>
-    // Toggle the "Other" church input field
+    /**
+     * Toggles visibility of the custom church input field.
+     */
     function toggleOtherChurch(value) {
         const otherDiv = document.getElementById('otherDiv');
         if (value === 'Other') {
             otherDiv.classList.remove('hidden');
+            otherDiv.style.display = 'block'; // Ensure visibility
             document.getElementById('customChurch').focus();
         } else {
             otherDiv.classList.add('hidden');
+            otherDiv.style.display = 'none';
         }
     }
 
-    // Add a new participant row
+    /**
+     * Dynamically adds a new row for participant names.
+     */
     function addRow() {
         const list = document.getElementById('list');
         const div = document.createElement('div');
         div.className = 'participant-entry';
-        div.style.marginTop = "10px";
+        div.style.marginTop = "12px";
+        div.style.animation = "slideInLeft 0.3s ease-out";
+        
         div.innerHTML = `
             <input type="text" class="p-name" placeholder="Full Name" required>
-            <button class="btn btn-remove" onclick="this.parentElement.remove()" title="Remove">✕</button>
+            <button class="btn btn-remove" onclick="this.parentElement.remove()" title="Remove Entry">✕</button>
         `;
         list.appendChild(div);
         
-        // Auto-focus the new input
+        // Auto-focus the new input field for faster typing
         div.querySelector('input').focus();
     }
 
-    // Save data to LocalStorage
+    /**
+     * Validates and saves data to the device's LocalStorage.
+     */
     function saveData() {
         const churchSelect = document.getElementById('churchSelect');
         let church = churchSelect.value;
@@ -98,7 +110,7 @@
             church = document.getElementById('customChurch').value.trim();
         }
         
-        // Validation: Church
+        // Validation: Ensure Church is selected/provided
         if (!church) {
             churchSelect.style.borderColor = 'var(--primary)';
             alert("Please select or specify your Local Church.");
@@ -109,13 +121,14 @@
         let currentData = JSON.parse(localStorage.getItem('campData')) || [];
         let addedCount = 0;
 
-        // Validation & Collection: Names
+        // Process each name input
         nameInputs.forEach(input => {
             const nameValue = input.value.trim();
             if (nameValue) {
                 currentData.push({
                     church: church.toUpperCase(),
                     name: nameValue.toUpperCase(),
+                    // Date formatted for easy sorting in Admin view
                     date: new Date().toLocaleDateString('en-US', { 
                         month: 'short', 
                         day: 'numeric', 
@@ -126,20 +139,25 @@
             }
         });
 
+        // Validation: Ensure at least one participant is listed
         if (addedCount === 0) {
             alert("Please enter at least one participant name.");
             return;
         }
 
-        // Store and Show Success
+        // Save to LocalStorage and trigger success UI
         localStorage.setItem('campData', JSON.stringify(currentData));
         document.getElementById('successModal').classList.add('active');
     }
 
-    // Close modal and refresh page
+    /**
+     * Closes the modal and resets the form for the next entry.
+     */
     function closeModal() {
         const modal = document.getElementById('successModal');
-        modal.style.opacity = '0';
+        modal.classList.remove('active');
+        
+        // Small delay to allow modal animation to finish before reload
         setTimeout(() => {
             location.reload();
         }, 400);

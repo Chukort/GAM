@@ -9,40 +9,51 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    <div class="container">
-        <div class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 20px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
+    <div class="container" style="max-width: 1000px;">
+        <div class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
             <div>
                 <h2>Dilaab Camp 2026</h2>
                 <p>Master Registration Database</p>
             </div>
-            <div class="stats-badge" style="background: var(--input-bg); padding: 10px 20px; border-radius: 12px; border: 1px solid var(--border); font-weight: 700;">
+            <div class="stats-badge" style="background: var(--input-bg); padding: 12px 24px; border-radius: 14px; border: 1px solid var(--border); font-weight: 800; font-size: 1.1rem;">
                 TOTAL: <span id="totalCount" style="color: var(--primary);">0</span>
             </div>
         </div>
 
-        <label>Filter by Church</label>
-        <div class="tabs-container" id="tabsList" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;">
-            </div>
+        <div class="admin-controls">
+            <label>Filter by Church</label>
+            <div class="tabs-container" id="tabsList" style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 25px;">
+                </div>
 
-        <div class="controls" style="display: flex; gap: 10px; margin-bottom: 20px; align-items: center; flex-wrap: wrap;">
-            <input type="text" id="searchInput" placeholder="Search participant name..." onkeyup="loadData()" style="flex: 2; min-width: 200px;">
-            <button class="btn" style="background: #10b981; flex: 1;" onclick="downloadPDF()">📄 Export PDF</button>
-            <button class="btn btn-remove" style="width: auto; padding: 0 20px;" onclick="clearData()" title="Clear All Records">Reset</button>
+            <div class="search-actions" style="display: flex; gap: 12px; margin-bottom: 25px; align-items: center; flex-wrap: wrap;">
+                <input type="text" id="searchInput" placeholder="Search participant name..." onkeyup="loadData()" style="flex: 2; min-width: 250px;">
+                
+                <div style="display: flex; gap: 10px; flex: 1; min-width: 250px;">
+                    <button class="btn" style="background: #10b981;" onclick="downloadPDF()">📄 Export PDF</button>
+                    <button class="btn btn-remove" style="width: auto; padding: 0 20px;" onclick="clearData()" title="Clear Device Data">Reset</button>
+                </div>
+            </div>
         </div>
 
-        <div class="table-responsive">
+        <div class="table-responsive" style="background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px solid var(--border);">
             <table id="adminTable">
                 <thead>
                     <tr>
-                        <th style="width: 50px;">#</th>
+                        <th style="width: 60px; text-align: center;">#</th>
                         <th>Church Name</th>
                         <th>Participant Name</th>
-                        <th>Date Registered</th>
+                        <th style="text-align: right;">Registration Date</th>
                     </tr>
                 </thead>
                 <tbody id="adminBody">
                     </tbody>
             </table>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <a href="registration.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
+                ← Back to Registration Form
+            </a>
         </div>
     </div>
 
@@ -50,19 +61,24 @@
         let currentFilter = "All";
 
         /**
-         * Core Data Loader: Sorts, Filters, and Renders everything
+         * Core Logic: Loads, Sorts, and Filters data from LocalStorage
          */
         function loadData() {
             const rawData = JSON.parse(localStorage.getItem('campData')) || [];
             const searchTerm = document.getElementById('searchInput').value.toLowerCase();
 
-            // 1. Sort Data Alphabetically
-            rawData.sort((a, b) => a.church.localeCompare(b.church) || a.name.localeCompare(b.name));
+            // 1. Alphabetical Sort (Church first, then Name)
+            rawData.sort((a, b) => {
+                if (a.church === b.church) {
+                    return a.name.localeCompare(b.name);
+                }
+                return a.church.localeCompare(b.church);
+            });
 
-            // 2. Extract Unique Churches for Tabs
+            // 2. Render Tabs (Only once or if data changes)
             renderTabs(rawData);
 
-            // 3. Filter based on Tab and Search Input
+            // 3. Apply Filters
             const filteredData = rawData.filter(item => {
                 const matchesTab = (currentFilter === "All" || item.church === currentFilter);
                 const matchesSearch = item.name.toLowerCase().includes(searchTerm);
@@ -78,7 +94,8 @@
             
             tabsList.innerHTML = churches.map(church => `
                 <button class="btn ${currentFilter === church ? '' : 'btn-add'}" 
-                        style="width: auto; padding: 8px 16px; font-size: 0.8rem; margin: 0; ${currentFilter === church ? 'background: var(--primary);' : ''}"
+                        style="width: auto; padding: 10px 18px; font-size: 0.85rem; margin: 0; 
+                               ${currentFilter === church ? 'background: var(--primary); border-color: var(--primary);' : 'background: var(--input-bg);'}"
                         onclick="setFilter('${church}')">
                     ${church}
                 </button>
@@ -95,16 +112,22 @@
             document.getElementById('totalCount').innerText = data.length;
             
             if (data.length === 0) {
-                body.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 40px; color: var(--text-muted);">No matching records found.</td></tr>';
+                body.innerHTML = `
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 60px; color: var(--text-muted);">
+                            <div style="font-size: 2rem; margin-bottom: 10px;">Empty</div>
+                            No records found on this device.
+                        </td>
+                    </tr>`;
                 return;
             }
 
             body.innerHTML = data.map((item, i) => `
                 <tr>
-                    <td>${i + 1}</td>
-                    <td><span style="color: var(--primary); font-weight: 600;">${item.church}</span></td>
-                    <td style="text-transform: uppercase;">${item.name}</td>
-                    <td style="color: var(--text-muted); font-size: 0.85rem;">${item.date}</td>
+                    <td style="text-align: center; color: var(--text-muted);">${i + 1}</td>
+                    <td><span style="color: var(--primary); font-weight: 700; letter-spacing: 0.5px;">${item.church}</span></td>
+                    <td style="text-transform: uppercase; font-weight: 500;">${item.name}</td>
+                    <td style="text-align: right; color: var(--text-muted); font-size: 0.85rem;">${item.date}</td>
                 </tr>
             `).join('');
         }
@@ -113,31 +136,40 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            doc.setFontSize(18);
-            doc.text(`Dilaab Camp 2026 - ${currentFilter} List`, 14, 15);
+            // PDF Branding
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(20);
+            doc.setTextColor(255, 31, 68); // Brand Crimson
+            doc.text("DILAAB CAMP 2026", 14, 18);
             
-            doc.setFontSize(10);
-            doc.text(`Generated on: ${new Date().toLocaleString()}`, 14, 22);
+            doc.setFontSize(12);
+            doc.setTextColor(40, 40, 40);
+            doc.text(`Master List: ${currentFilter}`, 14, 26);
+            
+            doc.setFont("helvetica", "italic");
+            doc.setFontSize(9);
+            doc.text(`Exported on: ${new Date().toLocaleString()}`, 14, 32);
 
             doc.autoTable({ 
                 html: '#adminTable', 
-                startY: 28,
-                theme: 'grid',
-                headStyles: { fillColor: [255, 31, 68] }, // Matches your primary crimson
-                styles: { cellPadding: 3, fontSize: 9 }
+                startY: 38,
+                theme: 'striped',
+                headStyles: { fillColor: [255, 31, 68], textColor: [255, 255, 255], fontStyle: 'bold' },
+                alternateRowStyles: { fillColor: [245, 245, 245] },
+                styles: { font: 'helvetica', fontSize: 10, cellPadding: 4 }
             });
 
-            doc.save(`Dilaab_Camp_${currentFilter.replace(/\s+/g, '_')}.pdf`);
+            doc.save(`Dilaab_Camp_MasterList_${currentFilter.replace(/\s+/g, '_')}.pdf`);
         }
 
         function clearData() {
-            if(confirm("DANGER: This will permanently delete ALL registration records from this device. Proceed?")) {
+            if(confirm("DANGER: This will permanently wipe all local registration data from this device. Are you sure?")) {
                 localStorage.removeItem('campData');
                 location.reload();
             }
         }
 
-        // Initialize on load
+        // Initialize
         window.onload = loadData;
     </script>
 </body>
