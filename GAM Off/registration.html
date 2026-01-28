@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="reg.css">
 </head>
 <body>
-
+new
 <div class="container">
     <header>
         <h2>Dilaab Camp 2026</h2>
@@ -42,8 +42,8 @@
     </div>
 
     <div style="margin-top: 25px; display: flex; flex-direction: column; gap: 12px;">
-        <button type="button" class="btn btn-add" onclick="addRow()">+ Add Another Person</button>
-        <button type="button" class="btn btn-submit" onclick="saveData()">Submit Registration</button>
+        <button type="button" class="btn btn-add" id="addBtn" onclick="addRow()">+ Add Another Person</button>
+        <button type="button" class="btn btn-submit" id="submitBtn" onclick="saveData()">Submit Registration</button>
     </div>
 </div>
 
@@ -51,7 +51,7 @@
     <div class="modal-content">
         <span class="modal-icon">🔥</span>
         <h2 style="background: none; -webkit-text-fill-color: var(--text-main); margin-bottom: 15px;">Registration Successful!</h2>
-        <p style="color: var(--text-muted); margin-bottom: 20px;">Your delegation has been added to the master list.</p>
+        <p style="color: var(--text-muted); margin-bottom: 20px;">Your delegation has been synced to the cloud master list.</p>
         
         <div style="padding: 20px; background: rgba(0,0,0,0.2); border-radius: 16px; border: 1px solid var(--border); margin-bottom: 25px;">
             <h3 style="color: white; margin: 0; letter-spacing: 2px;">DILAAB CAMP 2026</h3>
@@ -64,14 +64,17 @@
 </div>
 
 <script>
-    /**
-     * Toggles visibility of the custom church input field.
-     */
+    // --- GITHUB CONFIGURATION ---
+    const GITHUB_TOKEN = "YOUR_GITHUB_TOKEN_HERE"; // Put your token here
+    const OWNER = "YOUR_USERNAME";               // Put your GitHub username here
+    const REPO = "YOUR_REPO_NAME";               // Put your repo name here
+    const FILE_PATH = "database.json";           // Same folder as this file
+
     function toggleOtherChurch(value) {
         const otherDiv = document.getElementById('otherDiv');
         if (value === 'Other') {
             otherDiv.classList.remove('hidden');
-            otherDiv.style.display = 'block'; // Ensure visibility
+            otherDiv.style.display = 'block';
             document.getElementById('customChurch').focus();
         } else {
             otherDiv.classList.add('hidden');
@@ -79,88 +82,103 @@
         }
     }
 
-    /**
-     * Dynamically adds a new row for participant names.
-     */
     function addRow() {
         const list = document.getElementById('list');
         const div = document.createElement('div');
         div.className = 'participant-entry';
         div.style.marginTop = "12px";
         div.style.animation = "slideInLeft 0.3s ease-out";
-        
         div.innerHTML = `
             <input type="text" class="p-name" placeholder="Full Name" required>
             <button class="btn btn-remove" onclick="this.parentElement.remove()" title="Remove Entry">✕</button>
         `;
         list.appendChild(div);
-        
-        // Auto-focus the new input field for faster typing
         div.querySelector('input').focus();
     }
 
-    /**
-     * Validates and saves data to the device's LocalStorage.
-     */
-    function saveData() {
+    async function saveData() {
+        const btn = document.getElementById('submitBtn');
         const churchSelect = document.getElementById('churchSelect');
-        let church = churchSelect.value;
+        let church = churchSelect.value === 'Other' ? document.getElementById('customChurch').value.trim() : churchSelect.value;
         
-        if (church === 'Other') {
-            church = document.getElementById('customChurch').value.trim();
-        }
-        
-        // Validation: Ensure Church is selected/provided
         if (!church) {
             churchSelect.style.borderColor = 'var(--primary)';
-            alert("Please select or specify your Local Church.");
-            return;
+            return alert("Please select or specify your Local Church.");
         }
 
         const nameInputs = document.querySelectorAll('.p-name');
-        let currentData = JSON.parse(localStorage.getItem('campData')) || [];
-        let addedCount = 0;
-
-        // Process each name input
+        let newEntries = [];
         nameInputs.forEach(input => {
-            const nameValue = input.value.trim();
-            if (nameValue) {
-                currentData.push({
+            if (input.value.trim()) {
+                newEntries.push({
                     church: church.toUpperCase(),
-                    name: nameValue.toUpperCase(),
-                    // Date formatted for easy sorting in Admin view
-                    date: new Date().toLocaleDateString('en-US', { 
-                        month: 'short', 
-                        day: 'numeric', 
-                        year: 'numeric' 
-                    })
+                    name: input.value.trim().toUpperCase(),
+                    date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                 });
-                addedCount++;
             }
         });
 
-        // Validation: Ensure at least one participant is listed
-        if (addedCount === 0) {
-            alert("Please enter at least one participant name.");
-            return;
-        }
+        if (newEntries.length === 0) return alert("Please enter at least one participant.");
 
-        // Save to LocalStorage and trigger success UI
-        localStorage.setItem('campData', JSON.stringify(currentData));
-        document.getElementById('successModal').classList.add('active');
+        // UI State: Loading
+        btn.disabled = true;
+        btn.innerText = "Syncing to Cloud...";
+
+        try {
+            const url = `https://api.github.com/repos/${OWNER}/${REPO}/contents/${FILE_PATH}`;
+            
+            // 1. Get current file data
+            const res = await fetch(url, {
+                headers: { "Authorization": `token ${GITHUB_TOKEN}` }
+            });
+
+            let currentData = [];
+            let sha = "";
+
+            if (res.ok) {
+                const fileData = await res.json();
+                sha = fileData.sha;
+                // Decode from Base64
+                currentData = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+            }
+
+            // 2. Add new data
+            const updatedData = [...currentData, ...newEntries];
+            
+            // 3. Encode to Base64 (Unicode Safe)
+            const updatedContent = btoa(unescape(encodeURIComponent(JSON.stringify(updatedData, null, 2))));
+
+            // 4. Update file on GitHub
+            const putRes = await fetch(url, {
+                method: "PUT",
+                headers: {
+                    "Authorization": `token ${GITHUB_TOKEN}`,
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    message: `Registration: ${church}`,
+                    content: updatedContent,
+                    sha: sha
+                })
+            });
+
+            if (putRes.ok) {
+                document.getElementById('successModal').classList.add('active');
+            } else {
+                throw new Error("GitHub API rejected the update.");
+            }
+
+        } catch (err) {
+            console.error(err);
+            alert("Error: " + err.message);
+            btn.disabled = false;
+            btn.innerText = "Submit Registration";
+        }
     }
 
-    /**
-     * Closes the modal and resets the form for the next entry.
-     */
     function closeModal() {
-        const modal = document.getElementById('successModal');
-        modal.classList.remove('active');
-        
-        // Small delay to allow modal animation to finish before reload
-        setTimeout(() => {
-            location.reload();
-        }, 400);
+        document.getElementById('successModal').classList.remove('active');
+        setTimeout(() => { location.reload(); }, 400);
     }
 </script>
 

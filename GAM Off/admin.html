@@ -9,11 +9,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
+    new
     <div class="container" style="max-width: 1000px;">
         <div class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
             <div>
                 <h2>Dilaab Camp 2026</h2>
-                <p>Master Registration Database</p>
+                <p>Cloud Master Database</p>
             </div>
             <div class="stats-badge" style="background: var(--input-bg); padding: 12px 24px; border-radius: 14px; border: 1px solid var(--border); font-weight: 800; font-size: 1.1rem;">
                 TOTAL: <span id="totalCount" style="color: var(--primary);">0</span>
@@ -26,11 +27,11 @@
                 </div>
 
             <div class="search-actions" style="display: flex; gap: 12px; margin-bottom: 25px; align-items: center; flex-wrap: wrap;">
-                <input type="text" id="searchInput" placeholder="Search participant name..." onkeyup="loadData()" style="flex: 2; min-width: 250px;">
+                <input type="text" id="searchInput" placeholder="Search participant name..." onkeyup="filterAndRender()" style="flex: 2; min-width: 250px;">
                 
                 <div style="display: flex; gap: 10px; flex: 1; min-width: 250px;">
                     <button class="btn" style="background: #10b981;" onclick="downloadPDF()">📄 Export PDF</button>
-                    <button class="btn btn-remove" style="width: auto; padding: 0 20px;" onclick="clearData()" title="Clear Device Data">Reset</button>
+                    <button class="btn" style="background: #3b82f6;" onclick="fetchCloudData()">🔄 Refresh</button>
                 </div>
             </div>
         </div>
@@ -46,51 +47,63 @@
                     </tr>
                 </thead>
                 <tbody id="adminBody">
-                    </tbody>
+                    <tr>
+                        <td colspan="4" style="text-align: center; padding: 60px; color: var(--text-muted);">
+                            Loading cloud database...
+                        </td>
+                    </tr>
+                </tbody>
             </table>
         </div>
 
-        <div style="margin-top: 30px; text-align: center;">
+        <div style="margin-top: 30px; text-align: center; display: flex; justify-content: center; gap: 20px;">
             <a href="registration.html" style="color: var(--text-muted); text-decoration: none; font-size: 0.9rem; font-weight: 600;">
-                ← Back to Registration Form
+                ← Back to Registration
             </a>
         </div>
     </div>
 
     <script>
+        // --- GITHUB CONFIGURATION ---
+        const OWNER = "YOUR_USERNAME";        // Replace with your GitHub username
+        const REPO = "YOUR_REPO_NAME";        // Replace with your repo name
+        const FILE_PATH = "database.json";
+
+        let fullDatabase = []; // Stores all data from cloud
         let currentFilter = "All";
 
         /**
-         * Core Logic: Loads, Sorts, and Filters data from LocalStorage
+         * Fetches the latest data directly from GitHub Raw
          */
-        function loadData() {
-            const rawData = JSON.parse(localStorage.getItem('campData')) || [];
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        async function fetchCloudData() {
+            const body = document.getElementById('adminBody');
+            const url = `https://raw.githubusercontent.com/${OWNER}/${REPO}/main/${FILE_PATH}?t=${new Date().getTime()}`;
 
-            // 1. Alphabetical Sort (Church first, then Name)
-            rawData.sort((a, b) => {
-                if (a.church === b.church) {
-                    return a.name.localeCompare(b.name);
-                }
-                return a.church.localeCompare(b.church);
-            });
+            try {
+                const response = await fetch(url);
+                if (!response.ok) throw new Error("File not found");
+                
+                fullDatabase = await response.json();
+                
+                // Sort Alphabetically: Church first, then Name
+                fullDatabase.sort((a, b) => {
+                    if (a.church === b.church) return a.name.localeCompare(b.name);
+                    return a.church.localeCompare(b.church);
+                });
 
-            // 2. Render Tabs (Only once or if data changes)
-            renderTabs(rawData);
-
-            // 3. Apply Filters
-            const filteredData = rawData.filter(item => {
-                const matchesTab = (currentFilter === "All" || item.church === currentFilter);
-                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
-                return matchesTab && matchesSearch;
-            });
-
-            renderTable(filteredData);
+                renderTabs();
+                filterAndRender();
+            } catch (err) {
+                console.error(err);
+                body.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 40px; color: #ff4444;">
+                    Error: Could not connect to GitHub database. Ensure database.json exists.
+                </td></tr>`;
+            }
         }
 
-        function renderTabs(data) {
+        function renderTabs() {
             const tabsList = document.getElementById('tabsList');
-            const churches = ["All", ...new Set(data.map(item => item.church))];
+            const churches = ["All", ...new Set(fullDatabase.map(item => item.church))];
             
             tabsList.innerHTML = churches.map(church => `
                 <button class="btn ${currentFilter === church ? '' : 'btn-add'}" 
@@ -104,28 +117,31 @@
 
         function setFilter(church) {
             currentFilter = church;
-            loadData();
+            renderTabs();
+            filterAndRender();
         }
 
-        function renderTable(data) {
+        function filterAndRender() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
             const body = document.getElementById('adminBody');
-            document.getElementById('totalCount').innerText = data.length;
             
-            if (data.length === 0) {
-                body.innerHTML = `
-                    <tr>
-                        <td colspan="4" style="text-align: center; padding: 60px; color: var(--text-muted);">
-                            <div style="font-size: 2rem; margin-bottom: 10px;">Empty</div>
-                            No records found on this device.
-                        </td>
-                    </tr>`;
+            const filteredData = fullDatabase.filter(item => {
+                const matchesTab = (currentFilter === "All" || item.church === currentFilter);
+                const matchesSearch = item.name.toLowerCase().includes(searchTerm);
+                return matchesTab && matchesSearch;
+            });
+
+            document.getElementById('totalCount').innerText = filteredData.length;
+            
+            if (filteredData.length === 0) {
+                body.innerHTML = `<tr><td colspan="4" style="text-align: center; padding: 60px; color: var(--text-muted);">No records found.</td></tr>`;
                 return;
             }
 
-            body.innerHTML = data.map((item, i) => `
+            body.innerHTML = filteredData.map((item, i) => `
                 <tr>
                     <td style="text-align: center; color: var(--text-muted);">${i + 1}</td>
-                    <td><span style="color: var(--primary); font-weight: 700; letter-spacing: 0.5px;">${item.church}</span></td>
+                    <td><span style="color: var(--primary); font-weight: 700;">${item.church}</span></td>
                     <td style="text-transform: uppercase; font-weight: 500;">${item.name}</td>
                     <td style="text-align: right; color: var(--text-muted); font-size: 0.85rem;">${item.date}</td>
                 </tr>
@@ -136,41 +152,28 @@
             const { jsPDF } = window.jspdf;
             const doc = new jsPDF();
             
-            // PDF Branding
             doc.setFont("helvetica", "bold");
             doc.setFontSize(20);
-            doc.setTextColor(255, 31, 68); // Brand Crimson
+            doc.setTextColor(255, 31, 68);
             doc.text("DILAAB CAMP 2026", 14, 18);
             
             doc.setFontSize(12);
             doc.setTextColor(40, 40, 40);
             doc.text(`Master List: ${currentFilter}`, 14, 26);
-            
-            doc.setFont("helvetica", "italic");
-            doc.setFontSize(9);
-            doc.text(`Exported on: ${new Date().toLocaleString()}`, 14, 32);
 
             doc.autoTable({ 
                 html: '#adminTable', 
-                startY: 38,
+                startY: 35,
                 theme: 'striped',
-                headStyles: { fillColor: [255, 31, 68], textColor: [255, 255, 255], fontStyle: 'bold' },
-                alternateRowStyles: { fillColor: [245, 245, 245] },
-                styles: { font: 'helvetica', fontSize: 10, cellPadding: 4 }
+                headStyles: { fillColor: [255, 31, 68] },
+                styles: { fontSize: 9 }
             });
 
-            doc.save(`Dilaab_Camp_MasterList_${currentFilter.replace(/\s+/g, '_')}.pdf`);
+            doc.save(`Dilaab_MasterList_${currentFilter}.pdf`);
         }
 
-        function clearData() {
-            if(confirm("DANGER: This will permanently wipe all local registration data from this device. Are you sure?")) {
-                localStorage.removeItem('campData');
-                location.reload();
-            }
-        }
-
-        // Initialize
-        window.onload = loadData;
+        // Initialize on load
+        window.onload = fetchCloudData;
     </script>
 </body>
 </html>
