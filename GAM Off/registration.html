@@ -4,84 +4,106 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dilaab Camp Registration</title>
-    <link rel="stylesheet" href="reg.css">
+    <link rel="stylesheet" href="Reg.css">
 </head>
 <body>
-    <div class="container">
-        <h2>Dilaab Camp 2026</h2>
-        <p>Register your delegation below.</p>
-        
-        <div class="form-group">
-            <label>Church Name</label>
-            <select id="churchSelect" onchange="document.getElementById('otherDiv').classList.toggle('hidden', this.value !== 'Other')">
-                <option value="">Choose Church</option>
-                <option value="GAM CANLAON">GAM CANLAON</option>
-                <option value="GAM SAN CARLOS">GAM SAN CARLOS</option>
-                <option value="GAM PAMPLONA">GAM PAMPLONA</option>
-                <option value="GAM SAN JOSE">GAM SAN JOSE</option>
-                <option value="GAM DUMAGUETE">GAM DUMAGUETE</option>
-                <option value="HOPE CITY - GAM">HOPE CITY - GAM</option>
-                <option value="Other">Other</option>
-            </select>
-        </div>
 
-        <div id="otherDiv" class="form-group hidden">
-            <label>Specify Church Name</label>
-            <input type="text" id="customChurch" placeholder="Enter church name">
-        </div>
-
-        <div id="list" class="form-group">
-            <label>Participants</label>
-            <div class="participant-entry">
-                <input type="text" class="p-name" placeholder="Full Name" required>
-                <div style="width: 48px;"></div>
-            </div>
-        </div>
-
-        <button type="button" class="btn btn-add" onclick="addRow()">+ Add More Person</button>
-        <button type="button" class="btn btn-submit" onclick="saveData()">Submit Registration</button>
+<div class="container">
+    <h2>Dilaab Camp 2026</h2>
+    <p>Register your delegation below.</p>
+    
+    <div class="form-group">
+        <label>Church Name</label>
+        <select id="churchSelect" onchange="document.getElementById('otherDiv').classList.toggle('hidden', this.value !== 'Other')">
+            <option value="">-- Choose Local Church --</option>
+            <option value="GAM CANLAON">GAM CANLAON</option>
+            <option value="GAM SAN CARLOS">GAM SAN CARLOS</option>
+            <option value="GAM PAMPLONA">GAM PAMPLONA</option>
+            <option value="GAM SAN JOSE">GAM SAN JOSE</option>
+            <option value="GAM DUMAGUETE">GAM DUMAGUETE</option>
+            <option value="HOPE CITY - GAM">HOPE CITY - GAM</option>
+            <option value="Other">Other</option>
+        </select>
     </div>
 
-    <script>
-        function addRow() {
-            const div = document.createElement('div');
-            div.className = 'participant-entry';
-            div.innerHTML = `
-                <input type="text" class="p-name" placeholder="Full Name" required>
-                <button class="btn btn-remove" onclick="this.parentElement.remove()">✕</button>
-            `;
-            document.getElementById('list').appendChild(div);
+    <div id="otherDiv" class="form-group hidden">
+        <label>Specify Church Name</label>
+        <input type="text" id="customChurch" placeholder="Enter church name">
+    </div>
+
+    <div id="list" class="form-group">
+        <label>Participants</label>
+        <div class="participant-entry">
+            <input type="text" class="p-name" placeholder="Full Name" required>
+            <div style="width: 48px;"></div>
+        </div>
+    </div>
+
+    <button type="button" class="btn btn-add" onclick="addRow()">+ Add More Person</button>
+    <button type="button" class="btn btn-submit" onclick="saveData()">Submit Registration</button>
+</div>
+
+<div class="modal-overlay" id="successModal">
+    <div class="modal-content">
+        <span class="modal-icon">🔥</span>
+        <h2 style="background: none; -webkit-text-fill-color: var(--text-main);">Thank You For Registering!</h2>
+        <p style="color: var(--text-main); margin-bottom: 10px;">We are excited in the Lord to see you at the upcoming</p>
+        <h3 style="color: white; margin: 5px 0;">DILAAB CAMP 2026</h3>
+        <span class="theme-text">Theme: TUTOK</span>
+        <span class="scripture-text">Hebrews 12:2</span>
+        <br><br>
+        <button class="btn btn-submit" onclick="closeModal()">God Bless!</button>
+    </div>
+</div>
+
+<script>
+    function addRow() {
+        const div = document.createElement('div');
+        div.className = 'participant-entry';
+        div.innerHTML = `
+            <input type="text" class="p-name" placeholder="Full Name" required>
+            <button class="btn btn-remove" onclick="this.parentElement.remove()">✕</button>
+        `;
+        document.getElementById('list').appendChild(div);
+    }
+
+    function saveData() {
+        const churchSelect = document.getElementById('churchSelect').value;
+        const church = churchSelect === 'Other' ? document.getElementById('customChurch').value : churchSelect;
+        
+        if (!church || (churchSelect === 'Other' && !church.trim())) {
+            return alert("Please select or type your church name.");
         }
 
-        function saveData() {
-            const churchSelect = document.getElementById('churchSelect').value;
-            const church = churchSelect === 'Other' ? document.getElementById('customChurch').value : churchSelect;
-            
-            if (!church || (churchSelect === 'Other' && !church.trim())) {
-                return alert("Please select or type your church name.");
+        const names = document.querySelectorAll('.p-name');
+        let currentData = JSON.parse(localStorage.getItem('campData')) || [];
+        let addedCount = 0;
+
+        names.forEach(input => {
+            if (input.value.trim()) {
+                currentData.push({
+                    church: church.toUpperCase(),
+                    name: input.value.trim().toUpperCase(), // Auto-capitalize for clean PDF
+                    date: new Date().toLocaleDateString()
+                });
+                addedCount++;
             }
+        });
 
-            const names = document.querySelectorAll('.p-name');
-            let currentData = JSON.parse(localStorage.getItem('campData')) || [];
-            let addedCount = 0;
+        if (addedCount === 0) return alert("Please enter at least one participant name.");
+        
+        localStorage.setItem('campData', JSON.stringify(currentData));
+        
+        // Show the Premium Modal instead of Alert
+        document.getElementById('successModal').classList.add('active');
+    }
 
-            names.forEach(input => {
-                if (input.value.trim()) {
-                    currentData.push({
-                        church: church,
-                        name: input.value.trim(),
-                        date: new Date().toLocaleDateString()
-                    });
-                    addedCount++;
-                }
-            });
-
-            if (addedCount === 0) return alert("Please enter at least one participant name.");
-            localStorage.setItem('campData', JSON.stringify(currentData));
-            alert("Registration saved successfully!");
+    function closeModal() {
+        document.getElementById('successModal').classList.remove('active');
+        setTimeout(() => {
             location.reload(); 
-        }
-    </script>
+        }, 400);
+    }
+</script>
 </body>
-
 </html>
