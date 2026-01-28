@@ -9,7 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
 </head>
 <body>
-    new
+
     <div class="container" style="max-width: 1000px;">
         <div class="header" style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 25px; border-bottom: 1px solid var(--border); padding-bottom: 15px;">
             <div>
@@ -65,9 +65,10 @@
 
     <script>
         // --- GITHUB CONFIGURATION ---
-        const OWNER = "YOUR_USERNAME";        // Replace with your GitHub username
-        const REPO = "YOUR_REPO_NAME";        // Replace with your repo name
-        const FILE_PATH = "database.json";
+    const GITHUB_TOKEN = "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"; // Put your token here
+    const OWNER = "Chukort";               // Put your GitHub username here
+    const REPO = "GAM";               // Put your repo name here
+    const FILE_PATH = "database.json";           // Same folder as this file
 
         let fullDatabase = []; // Stores all data from cloud
         let currentFilter = "All";
